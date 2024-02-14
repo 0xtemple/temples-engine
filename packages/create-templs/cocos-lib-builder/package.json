@@ -1,0 +1,24 @@
+{
+  "name": "cocos-lib-builder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "pnpm run build.sui && pnpm run build.aptos",
+    "build.sui": "browserify sui.js -p esmify >  ../templs-cocos-template/assets/lib/templs.js",
+    "build.aptos": "browserify aptos.js -p esmify >  ../templs-cocos-template/assets/lib/templs.js"
+  },
+  "keywords": [],
+  "author": "team@0xtempl.com",
+  "license": "ISC",
+  "dependencies": {
+    "@0xtempl/client": "^0.5.10",
+    "@0xtempl/aptos-client": "^0.0.6",
+    "browser-resolve": "^2.0.0",
+    "browser-sync": "^2.29.3"
+  },
+  "devDependencies": {
+    "esmify": "^2.1.1"
+  }
+}

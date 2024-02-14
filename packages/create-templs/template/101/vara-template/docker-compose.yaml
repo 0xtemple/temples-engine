@@ -1,0 +1,29 @@
+
+version: "3"
+
+services:
+  sui-test-validator-node:
+    image: vladilenaksana/sui-test-validator:v0.0.3
+    restart: always
+    volumes:
+      - ./:/app
+    ports:
+      - 9000:9000
+      - 9123:9123
+    command: ["/opt/sui/bin/sui-test-validator", "--fullnode-rpc-addr", "0.0.0.0:9000", "--faucet-addr", "0.0.0.0:9123"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://sui-test-validator-node:9123"]
+      interval: 3s
+      timeout: 5s
+      retries: 10
+
+  # webapp:
+  #   build:
+  #     context: .
+  #     dockerfile: ./Dockerfile
+  #   ports:
+  #     - 3000:3000
+  #   depends_on:
+  #     "sui-test-validator-node":
+  #       condition: service_healthy
+  #   restart: always

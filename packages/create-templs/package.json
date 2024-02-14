@@ -1,0 +1,46 @@
+{
+  "name": "create-templs",
+  "version": "0.5.6",
+  "type": "module",
+  "license": "MIT",
+  "author": "team@templs.build",
+  "bin": {
+    "create-templs": "index.js"
+  },
+  "files": [
+    "index.js",
+    "template",
+    "dist"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "dev": "unbuild && node index.js",
+    "build": "unbuild && npm run cocos-js-build",
+    "cocos-js-build": "cd cocos-lib-builder && npm i && browserify aptos.js -p esmify >  ../template/cocos/aptos-template/assets/lib/templs.js && browserify sui.js -p esmify >  ../template/cocos/sui-template/assets/lib/templs.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": "^18.16.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/0xtempl/templs-engine.git"
+  },
+  "dependencies": {
+    "browser-resolve": "^2.0.0",
+    "browser-sync": "^2.29.3"
+  },
+  "devDependencies": {
+    "@types/cross-spawn": "^6.0.2",
+    "@types/minimist": "^1.2.2",
+    "@types/prompts": "^2.4.3",
+    "cross-spawn": "^7.0.3",
+    "kolorist": "^1.7.0",
+    "prompts": "^2.4.2",
+    "tsc": "^2.0.4",
+    "unbuild": "^1.1.2",
+    "esmify": "^2.1.1"
+  }
+}

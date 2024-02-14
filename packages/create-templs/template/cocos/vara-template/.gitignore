@@ -1,0 +1,38 @@
+#///////////////////////////
+# Cocos Creator 3D Project
+#///////////////////////////
+library/
+temp/
+local/
+build/
+profiles/
+native
+
+# misc
+.DS_Store
+*.pem
+
+# NPM
+#//////////////////////////
+node_modules/
+
+#//////////////////////////
+# VSCode
+#//////////////////////////
+.vscode/
+
+#//////////////////////////
+# WebStorm
+#//////////////////////////
+.idea/
+
+.env
+
+localnode.nohup.out
+
+contracts/counter/build
+contracts/counter/.history
+
+pnpm-lock.yaml
+
+assets/Scripts/chain/key.ts
