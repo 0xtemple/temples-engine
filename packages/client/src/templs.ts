@@ -238,8 +238,8 @@ export class Templs {
    * it will generate signer from the mnemonic with the given derivePathParams.
    * @param derivePathParams, such as { accountIndex: 2, isExternal: false, addressIndex: 10 }, comply with the BIP44 standard
    */
-  getKeypair(derivePathParams?: DerivePathParams) {
-    return this.accountManager.getKeyPair(derivePathParams);
+  getKeypair() {
+    return this.accountManager.getKeyPair();
   }
 
   /**
@@ -307,7 +307,7 @@ export class Templs {
       txBlock instanceof TransactionBlock
         ? await txBlock.build({ client: this.client() })
         : txBlock;
-    const keyPair = this.getKeypair(derivePathParams);
+    const keyPair = await this.getKeypair();
     return await keyPair.signTransactionBlock(txBytes);
   }
 

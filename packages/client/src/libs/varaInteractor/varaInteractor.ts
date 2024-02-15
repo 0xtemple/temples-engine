@@ -1,12 +1,5 @@
-import { SuiClient } from '@mysten/sui.js/client';
-import type {
-  SuiTransactionBlockResponseOptions,
-  SuiTransactionBlockResponse,
-  SuiObjectDataOptions,
-  SuiObjectData,
-} from '@mysten/sui.js/client';
-import type * as RpcTypes from '@mysten/sui.js/dist/cjs/client/types/generated';
-import { requestSuiFromFaucetV0, getFaucetHost } from '@mysten/sui.js/faucet';
+import { GearApi } from '@gear-js/api';
+
 import { FaucetNetworkType, NetworkType, ObjectData } from '../../types';
 import { SuiOwnedObject, SuiSharedObject } from '../suiModel';
 import { delay } from './util';
@@ -16,9 +9,9 @@ import { delay } from './util';
  * It always uses the gas coin to pay for the gas,
  * and update the gas coin after the transaction.
  */
-export class SuiInteractor {
-  public readonly clients: SuiClient[];
-  public currentClient: SuiClient;
+export class VaraInteractor {
+  public readonly clients: GearApi[];
+  public currentClient: GearApi;
   public readonly fullNodes: string[];
   public currentFullNode: string;
 
@@ -28,7 +21,9 @@ export class SuiInteractor {
     if (fullNodeUrls.length === 0)
       throw new Error('fullNodeUrls must not be empty');
     this.fullNodes = fullNodeUrls;
-    this.clients = fullNodeUrls.map((url) => new SuiClient({ url }));
+    this.clients = fullNodeUrls.map(
+      (providerAddress) => new GearApi({ providerAddress })
+    );
     this.currentFullNode = fullNodeUrls[0];
     this.currentClient = this.clients[0];
     this.network = network;

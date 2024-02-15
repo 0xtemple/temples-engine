@@ -1,5 +1,3 @@
-import { fromB64 } from '@mysten/sui.js/utils';
-
 /**
  * @description This regular expression matches any string that contains only hexadecimal digits (0-9, A-F, a-f).
  * @param str
@@ -31,19 +29,6 @@ export const fromHEX = (hexStr: string): Uint8Array => {
     throw new Error(`Unable to parse HEX: ${hexStr}`);
   }
   return Uint8Array.from(intArr);
-};
-
-/**
- * @description Convert a hex or base64 string to Uint8Array
- */
-export const hexOrBase64ToUint8Array = (str: string): Uint8Array => {
-  if (isHex(str)) {
-    return fromHEX(str);
-  } else if (isBase64(str)) {
-    return fromB64(str);
-  } else {
-    throw new Error('The string is not a valid hex or base64 string.');
-  }
 };
 
 const PRIVATE_KEY_SIZE = 32;
