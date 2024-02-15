@@ -40,3 +40,7 @@ pnpm-lock.yaml
 #sui log
 sui.log.*
 *.nohup.out
+
+# rust
+contracts/target
+contracts/.binpath
