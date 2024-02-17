@@ -17,29 +17,29 @@ import type {
 import type { SharedObjectRef, ObjectArg } from '@mysten/sui.js/bcs';
 // export type TransactionResult = TransactionArgument & TransactionArgument[];
 
-import { SuiMoveMoudleFuncType } from '../libs/suiContractFactory/types';
+// import { SuiMoveMoudleFuncType } from '../libs/suiContractFactory/types';
 
-export type ObeliskObjectData = {
-  objectId: string;
-  objectType: string;
-  objectVersion: number;
-  objectDisplay: DisplayFieldsResponse;
-  objectFields: ObjectContentFields;
-};
+// export type ObeliskObjectData = {
+//   objectId: string;
+//   objectType: string;
+//   objectVersion: number;
+//   objectDisplay: DisplayFieldsResponse;
+//   objectFields: ObjectContentFields;
+// };
 
-export type ObeliskObjectContent = {
-  dataType: 'moveObject';
-  fields: MoveStruct;
-  hasPublicTransfer: boolean;
-  type: string;
-};
+// export type ObeliskObjectContent = {
+//   dataType: 'moveObject';
+//   fields: MoveStruct;
+//   hasPublicTransfer: boolean;
+//   type: string;
+// };
 
-export type ObeliskParams = {
+export type TemplsParams = {
   mnemonics?: string;
   secretKey?: string;
   fullnodeUrls?: string[];
   faucetUrl?: string;
-  networkType?: NetworkType;
+  networkType?: Network;
   packageId?: string;
   metadata?: SuiMoveNormalizedModules;
 };
@@ -136,16 +136,22 @@ export type DerivePathParams = {
   addressIndex?: number;
 };
 
-export type NetworkType = 'testnet' | 'mainnet' | 'devnet' | 'localnet';
+// export type NetworkType = 'testnet' | 'mainnet' | 'devnet' | 'localnet';
+export enum Network {
+  MAINNET = 'mainnet',
+  TESTNET = 'testnet',
+  DEVNET = 'devnet',
+  LOCAL = 'local',
+}
 export type FaucetNetworkType = 'testnet' | 'devnet' | 'localnet';
 
-export type SuiKitParams = {
-  mnemonics?: string;
-  secretKey?: string;
-  fullnodeUrls?: string[];
-  faucetUrl?: string;
-  networkType?: NetworkType;
-};
+// export type SuiKitParams = {
+//   mnemonics?: string;
+//   secretKey?: string;
+//   fullnodeUrls?: string[];
+//   faucetUrl?: string;
+//   networkType?: NetworkType;
+// };
 
 export type ObjectData = {
   objectId: string;
