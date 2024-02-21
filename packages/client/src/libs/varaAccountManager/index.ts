@@ -8,7 +8,7 @@ export class VaraAccountManager {
   private mnemonics: string;
   private secretKey: string;
   public currentKeyPair: Promise<KeyringPair>;
-  public currentAddress!: string;
+  // public currentAddress!: string;
 
   /**
    * Support the following ways to init the VaraToolkit:
@@ -33,9 +33,9 @@ export class VaraAccountManager {
       ? createAccount(this.secretKey)
       : createAccount(this.mnemonics);
     // Wait for the promise to resolve and then set the currentAddress
-    this.currentKeyPair.then((keyPair: KeyringPair) => {
-      this.currentAddress = keyPair.address;
-    });
+    // this.currentKeyPair.then((keyPair: KeyringPair) => {
+    //   this.currentAddress = keyPair.address;
+    // });
   }
 
   getKeyPair() {
@@ -44,7 +44,7 @@ export class VaraAccountManager {
   }
 
   async getAddress() {
-    if (!this.mnemonics) return this.currentAddress;
+    if (!this.mnemonics) return (await this.currentKeyPair).address;
     return (await createAccount(this.mnemonics)).address;
   }
 
@@ -55,9 +55,9 @@ export class VaraAccountManager {
   switchAccount() {
     if (this.mnemonics) {
       this.currentKeyPair = createAccount(this.mnemonics);
-      this.currentKeyPair.then((keyPair: KeyringPair) => {
-        this.currentAddress = keyPair.address;
-      });
+      // this.currentKeyPair.then((keyPair: KeyringPair) => {
+      //   this.currentAddress = keyPair.address;
+      // });
     }
   }
 }

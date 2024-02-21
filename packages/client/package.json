@@ -61,6 +61,7 @@
     "@polkadot/keyring": "^12.3.1",
     "@polkadot/types": "^10.11.2",
     "@polkadot/util": "^12.6.2",
+    "@polkadot/util-crypto": "^12.6.2",
     "@scure/bip39": "^1.2.1",
     "assert": "^2.1.0",
     "colorts": "^0.1.63",

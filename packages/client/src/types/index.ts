@@ -122,7 +122,6 @@ export type DerivePathParams = {
 export enum Network {
   MAINNET = 'mainnet',
   TESTNET = 'testnet',
-  DEVNET = 'devnet',
   LOCAL = 'local',
 }
 export type FaucetNetworkType = 'testnet' | 'devnet' | 'localnet';

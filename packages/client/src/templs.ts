@@ -12,7 +12,7 @@ import {
   // SuiTxArgument,
   Network,
 } from './types';
-import { GearApi, ProgramMetadata } from '@gear-js/api';
+import { GearApi, ProgramMetadata, HexString } from '@gear-js/api';
 import { normalizeHexAddress, numberToAddressHex } from './utils';
 import keccak256 from 'keccak256';
 
@@ -106,8 +106,8 @@ export class Templs {
     networkType,
     fullnodeUrls,
     packageId,
-    metadata,
-  }: TemplsParams = {}) {
+  }: // metadata,
+  TemplsParams = {}) {
     // Init the account manager
     this.accountManager = new VaraAccountManager({ mnemonics, secretKey });
     // Init the rpc provider
@@ -233,16 +233,16 @@ export class Templs {
     return this.accountManager.getAddress();
   }
 
-  currentAddress() {
-    return this.accountManager.currentAddress;
+  async currentAddress() {
+    return await this.accountManager.getAddress();
   }
 
   getPackageId() {
     return this.packageId;
   }
 
-  getMetadata() {
-    return this.metadata;
+  async getMetadata(programId: HexString) {
+    return await this.varaInteractor.getMetaHash(programId);
   }
 
   async getBalance(account?: String) {

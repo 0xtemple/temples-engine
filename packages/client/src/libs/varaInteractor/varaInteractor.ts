@@ -3,16 +3,29 @@ import {
   MessageSendOptions,
   PayloadType,
   HexString,
+  GearKeyring,
+  decodeAddress,
 } from '@gear-js/api';
+import { blake2AsHex } from '@polkadot/util-crypto';
 // import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { FaucetNetworkType, Network } from '../../types';
 // import { SuiOwnedObject, SuiSharedObject } from '../suiModel';
 import { delay } from './util';
 import { Keyring } from '@polkadot/keyring';
-import { ProgramMetadata } from '@gear-js/api';
-import { GearProgram } from '@gear-js/api/Program';
+import { ProgramMetadata, GearProgram } from '@gear-js/api';
 import { ApiPromise, WsProvider } from '@polkadot/api';
+import { metadata } from '@polkadot/types/interfaces/essentials';
+import { KeyringPair } from '@polkadot/keyring/types';
+
+function hexToBinary(hex: string): string {
+  let binaryString = '';
+  for (let i = 0; i < hex.length; i++) {
+    const bin = parseInt(hex[i], 16).toString(2).padStart(4, '0');
+    binaryString += bin;
+  }
+  return binaryString;
+}
 
 /**
  * `SuiTransactionSender` is used to send transaction with a given gas coin.
@@ -99,8 +112,7 @@ export class VaraInteractor {
           // if you send message with issued voucher
         };
 
-        const gearProgram = new GearProgram(this.clients[clientIdx]);
-        const meta = await gearProgram.metaHash(programId);
+        const meta = await this.clients[clientIdx].program.metaHash(programId);
 
         // In that case payload will be encoded using meta.types.handle.input type
         let extrinsic = this.clients[clientIdx].message.send(message, meta);
@@ -126,39 +138,47 @@ export class VaraInteractor {
   }
 
   async callContract(
-    signer: Keyring,
+    signer: KeyringPair,
     programId: HexString,
-    metaHash: HexString,
+    // metaHash: HexString,
     payload: PayloadType,
-    gasLimit: number | undefined,
-    value: number | undefined
+    gasLimit?: number,
+    value?: number
   ) {
     for (const clientIdx in this.clients) {
       try {
-        const message: MessageSendOptions = {
-          destination: programId, // programId
-          payload,
-          gasLimit: gasLimit ? gasLimit : 10000000,
-          value: value ? value : 1000,
-          // prepaid: true,
-          // account: accountId,
-          // if you send message with issued voucher
-        };
+        await delay(1500);
+        // const alice =  signer;
+
+        // const payload = {
+        //   One: 'String',
+        // };
+
+        const metaHash = await this.clients[clientIdx].program.metaHash(
+          programId
+        );
         const meta = ProgramMetadata.from(metaHash);
 
-        // In that case payload will be encoded using meta.types.handle.input type
-        let extrinsic = this.clients[clientIdx].message.send(message, meta);
-        // So if you want to use another type you can specify it
-
-        extrinsic = this.clients[clientIdx].message.send(
-          message,
+        const gas = await this.clients[clientIdx].program.calculateGas.handle(
+          decodeAddress(signer.address),
+          programId,
+          payload,
+          20000,
+          true,
           meta
-          // meta.types.handle.input
         );
-        // return extrinsic;
-        return await extrinsic.signAndSend(signer, (event: any) => {
-          console.log(event.toHuman());
-        });
+
+        const tx = await this.clients[clientIdx].message.send(
+          {
+            destination: programId,
+            payload,
+            gasLimit: gas.min_limit,
+            value: 20000,
+          },
+          meta
+        );
+
+        return tx;
       } catch (err) {
         console.warn(
           `Failed to send transaction with fullnode ${this.fullNodes[clientIdx]}: ${err}`
@@ -167,6 +187,62 @@ export class VaraInteractor {
       }
     }
     throw new Error('Failed to send transaction with all fullnodes');
+  }
+
+  async getMetaHash(programId: HexString) {
+    for (const clientIdx in this.clients) {
+      try {
+        await delay(1500);
+        const metaHash = await this.clients[clientIdx].program.metaHash(
+          programId
+        );
+        return metaHash;
+      } catch (err) {
+        console.warn(
+          `Failed to get metaHash with fullnode ${this.fullNodes[clientIdx]}: ${err}`
+        );
+        await delay(2000);
+      }
+    }
+    throw new Error('Failed to get metaHash with all fullnodes');
+  }
+
+  async queryState(programId: HexString) {
+    for (const clientIdx in this.clients) {
+      try {
+        await delay(1500);
+        // const gearProgram = new GearProgram(this.clients[clientIdx]);
+        const metaHash = await this.clients[clientIdx].program.metaHash(
+          programId
+        );
+        console.log('test hex 1: ', blake2AsHex(metaHash, 256));
+        console.log('test hex 2: ', metaHash);
+        const hexString =
+          'ac3314cfb08f748652d46d8839ddab19d3aebcb100b312c3fcff5beac1f1c1ef';
+
+        const binaryString = hexToBinary(hexString);
+        console.log(binaryString);
+
+        const meta = ProgramMetadata.from(`0x${binaryString}`);
+        console.log(meta);
+        const state = await this.clients[clientIdx].programState.read(
+          {
+            programId: programId as HexString,
+            payload: {
+              GetCurrentCounter: null,
+            },
+          },
+          meta
+        );
+        return state;
+      } catch (err) {
+        console.warn(
+          `Failed to get metaHash with fullnode ${this.fullNodes[clientIdx]}: ${err}`
+        );
+        await delay(2000);
+      }
+    }
+    throw new Error('Failed to get metaHash with all fullnodes');
   }
 
   // async getObjects(
