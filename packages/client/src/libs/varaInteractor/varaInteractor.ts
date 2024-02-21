@@ -4,12 +4,15 @@ import {
   PayloadType,
   HexString,
 } from '@gear-js/api';
-
+// import { SubmittableExtrinsic } from '@polkadot/api/types';
+import { ISubmittableResult } from '@polkadot/types/types';
 import { FaucetNetworkType, Network } from '../../types';
 // import { SuiOwnedObject, SuiSharedObject } from '../suiModel';
 import { delay } from './util';
-import Keyring from '@polkadot/keyring';
+import { Keyring } from '@polkadot/keyring';
 import { ProgramMetadata } from '@gear-js/api';
+import { GearProgram } from '@gear-js/api/Program';
+import { ApiPromise, WsProvider } from '@polkadot/api';
 
 /**
  * `SuiTransactionSender` is used to send transaction with a given gas coin.
@@ -19,6 +22,9 @@ import { ProgramMetadata } from '@gear-js/api';
 export class VaraInteractor {
   public readonly clients: GearApi[];
   public currentClient: GearApi;
+  public readonly polkadotProviders: WsProvider[];
+  public polkadotProvider: WsProvider;
+  public polkadotApi: Promise<ApiPromise>;
   public readonly fullNodes: string[];
   public currentFullNode: string;
 
@@ -33,6 +39,12 @@ export class VaraInteractor {
     );
     this.currentFullNode = fullNodeUrls[0];
     this.currentClient = this.clients[0];
+
+    this.polkadotProviders = fullNodeUrls.map(
+      (providerAddress) => new WsProvider(providerAddress)
+    );
+    this.polkadotProvider = this.polkadotProviders[0];
+    this.polkadotApi = ApiPromise.create({ provider: this.polkadotProvider });
     this.network = network;
   }
 
@@ -69,15 +81,16 @@ export class VaraInteractor {
 
   async signAndSend(
     signer: Keyring,
-    destination: HexString,
+    programId: HexString,
+    // metaHash: HexString,
     payload: PayloadType,
-    gasLimit: number | undefined,
-    value: number | undefined
+    gasLimit?: number,
+    value?: number
   ) {
     for (const clientIdx in this.clients) {
       try {
         const message: MessageSendOptions = {
-          destination, // programId
+          destination: programId, // programId
           payload,
           gasLimit: gasLimit ? gasLimit : 10000000,
           value: value ? value : 1000,
@@ -85,7 +98,53 @@ export class VaraInteractor {
           // account: accountId,
           // if you send message with issued voucher
         };
-        const meta = ProgramMetadata.from(destination);
+
+        const gearProgram = new GearProgram(this.clients[clientIdx]);
+        const meta = await gearProgram.metaHash(programId);
+
+        // In that case payload will be encoded using meta.types.handle.input type
+        let extrinsic = this.clients[clientIdx].message.send(message, meta);
+        // So if you want to use another type you can specify it
+
+        extrinsic = this.clients[clientIdx].message.send(
+          message,
+          meta
+          // meta.types.handle.input
+        );
+        // return extrinsic;
+        return await extrinsic.signAndSend(signer, (event: any) => {
+          console.log(event.toHuman());
+        });
+      } catch (err) {
+        console.warn(
+          `Failed to send transaction with fullnode ${this.fullNodes[clientIdx]}: ${err}`
+        );
+        await delay(2000);
+      }
+    }
+    throw new Error('Failed to send transaction with all fullnodes');
+  }
+
+  async callContract(
+    signer: Keyring,
+    programId: HexString,
+    metaHash: HexString,
+    payload: PayloadType,
+    gasLimit: number | undefined,
+    value: number | undefined
+  ) {
+    for (const clientIdx in this.clients) {
+      try {
+        const message: MessageSendOptions = {
+          destination: programId, // programId
+          payload,
+          gasLimit: gasLimit ? gasLimit : 10000000,
+          value: value ? value : 1000,
+          // prepaid: true,
+          // account: accountId,
+          // if you send message with issued voucher
+        };
+        const meta = ProgramMetadata.from(metaHash);
 
         // In that case payload will be encoded using meta.types.handle.input type
         let extrinsic = this.clients[clientIdx].message.send(message, meta);
