@@ -2,7 +2,7 @@
 import * as prettier from "prettier";
 import * as rustPlugin from "prettier-plugin-rust";
 
-export async function formatMove(
+export async function formatRust(
   content: string,
   prettierConfigPath?: string
 ): Promise<string> {
@@ -14,12 +14,6 @@ export async function formatMove(
     return prettier.format(content, {
       plugins: [rustPlugin],
       // parser: "rustParse",
-
-      printWidth: 120,
-      semi: true,
-      tabWidth: 2,
-      useTabs: false,
-      bracketSpacing: true,
 
       ...config,
     });

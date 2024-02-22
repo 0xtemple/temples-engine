@@ -1,7 +1,7 @@
 import type { CommandModule } from "yargs";
 import { logError } from "../utils/errors";
-import { upgradeHandler } from "../utils";
-import { ObeliskConfig, loadConfig, ValueType } from "@0xtempl/common";
+import { uploadHandler } from "../utils";
+import { loadConfig, ObeliskConfig } from "@0xtempl/common";
 
 type Options = {
   network: any;
@@ -9,9 +9,9 @@ type Options = {
 };
 
 const commandModule: CommandModule<Options, Options> = {
-  command: "upgrade",
+  command: "upload",
 
-  describe: "Upgrade your move contracts",
+  describe: "Upload templs rust contracts",
 
   builder(yargs) {
     return yargs.options({
@@ -22,7 +22,7 @@ const commandModule: CommandModule<Options, Options> = {
       },
       configPath: {
         type: "string",
-        default: "temples.config.ts",
+        default: "templs.config.ts",
         decs: "Path to the config file",
       },
     });
@@ -31,17 +31,7 @@ const commandModule: CommandModule<Options, Options> = {
   async handler({ network, configPath }) {
     try {
       const obeliskConfig = (await loadConfig(configPath)) as ObeliskConfig;
-
-      let schemaNames = Object.keys(obeliskConfig.schemas).filter(
-        (key) =>
-          !(
-            typeof obeliskConfig.schemas === "object" &&
-            "ephemeral" in obeliskConfig.schemas &&
-            (obeliskConfig.schemas[key] as ValueType).ephemeral
-          )
-      );
-
-      await upgradeHandler(obeliskConfig.name, network, schemaNames);
+      await uploadHandler(obeliskConfig.name, network);
     } catch (error: any) {
       logError(error);
       process.exit(1);

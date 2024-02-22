@@ -8,12 +8,13 @@ edition = "2021"
 [dependencies]
 engine-systems = { path = "systems" }
 engine-schema = { path = "schema" }
-gstd = { git = "https://github.com/gear-tech/gear.git", tag = "v1.0.2", features = ["debug"] }
-gmeta = { git = "https://github.com/gear-tech/gear", tag = "v1.0.2" }
+gstd = { git = "https://github.com/gear-tech/gear.git", tag = "v1.1.1", features = ["debug"] }
+gmeta = { git = "https://github.com/gear-tech/gear", tag = "v1.1.1" }
+log = "0.4.20"
 
 [build-dependencies]
-gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git", tag = "v1.0.2" }
+gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git", tag = "v1.1.1" }
 engine-metadata = { path = "metadata" }
 
 [dev-dependencies]
-gtest = { git = "https://github.com/gear-tech/gear.git", tag = "v1.0.2" }
+gtest = { git = "https://github.com/gear-tech/gear.git", tag = "v1.1.1" }
