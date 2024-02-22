@@ -1,23 +1,5 @@
-// import { ObjectContentFields } from '@mysten/sui.js/src/types';
-// import type { SerializedBcs } from '@mysten/bcs';
-// import type { TransactionArgument } from '@mysten/sui.js/transactions';
-// import type {
-//   TransactionBlock,
-//   TransactionObjectArgument,
-//   TransactionResult,
-// } from '@mysten/sui.js/transactions';
-// import type {
-//   SuiObjectRef,
-//   SuiMoveNormalizedModules,
-//   DevInspectResults,
-//   SuiTransactionBlockResponse,
-//   DisplayFieldsResponse,
-//   MoveStruct,
-// } from '@mysten/sui.js/client';
-// import type { SharedObjectRef, ObjectArg } from '@mysten/sui.js/bcs';
-// export type TransactionResult = TransactionArgument & TransactionArgument[];
-
 import { ProgramMetadata } from '@gear-js/api';
+import type { SubmittableExtrinsic } from '@polkadot/api/submittable/types';
 
 // import { SuiMoveMoudleFuncType } from '../libs/suiContractFactory/types';
 
@@ -47,7 +29,7 @@ export type TemplesParams = {
   fullnodeUrls?: NodeUrlType[];
   networkType?: Network;
   packageId?: string;
-  metaHash?: string;
+  metadata?: string;
   connectWs?: boolean;
 };
 
@@ -81,33 +63,28 @@ export type SchemaContentType = {
   dataType: 'moveObject';
 };
 
-// export interface MessageMeta {
-//   readonly meta: SuiMoveMoudleFuncType;
-// }
+export type VaraFuncType = {
+  funcName: string;
+  paramType: string;
+};
 
-// export interface ContractQuery extends MessageMeta {
-//   (
-//     tx: TransactionBlock,
-//     params: (TransactionArgument | SerializedBcs<any>)[],
-//     typeArguments?: string[],
-//     isRaw?: boolean
-//   ): ContractCallResult<ApiType, ContractCallOutcome>;
-// }
+export interface MessageMeta {
+  readonly meta: VaraFuncType;
+}
 
-// export interface ContractTx extends MessageMeta {
-//   (
-//     tx: TransactionBlock,
-//     params: (TransactionArgument | SerializedBcs<any>)[],
-//     typeArguments?: string[],
-//     isRaw?: boolean
-//   ): SubmittableExtrinsic<ApiType>;
-// }
+export interface ContractTx extends MessageMeta {
+  (params?: unknown[] | null, isRaw?: boolean): SubmittableExtrinsic;
+}
 
-// export type MapMessageTx = Record<string, ContractTx>;
-// export type MapMessageQuery = Record<string, ContractQuery>;
+export interface ContractQuery extends MessageMeta {
+  (params?: unknown[] | null): any;
+}
 
-// export type MapMoudleFuncTx = Record<string, MapMessageTx>;
-// export type MapMoudleFuncQuery = Record<string, MapMessageQuery>;
+export type MapMessageTx = Record<string, ContractTx>;
+export type MapMessageQuery = Record<string, ContractQuery>;
+
+export type MapMoudleFuncTx = Record<string, MapMessageTx>;
+export type MapMoudleFuncQuery = Record<string, MapMessageQuery>;
 
 // export type MapMoudleFuncTest = Record<string, Record<string, string>>;
 // export type MapMoudleFuncQueryTest = Record<string, Record<string, string>>;

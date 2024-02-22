@@ -54,17 +54,23 @@ export class VaraInteractor {
     this.fullNodes = fullNodeUrls;
 
     if (connectWs === true) {
-      this.wsProviders = fullNodeUrls.map(
-        (providerAddress) => new WsProvider(providerAddress.ws)
-      );
-      this.wsProvider = this.wsProviders[0];
-      this.wsApi = ApiPromise.create({ provider: this.wsProvider });
+      // this.wsProviders = fullNodeUrls.map(
+      //   (providerAddress) => new WsProvider(providerAddress.ws)
+      // );
+      // this.wsProvider = this.wsProviders[0];
+      // this.wsApi = ApiPromise.create({ provider: this.wsProvider });
+      this.clients = fullNodeUrls.map((fullNodeUrl) => {
+        return new GearApi({
+          providerAddress: fullNodeUrl.ws,
+          noInitWarn: true,
+        });
+      });
+    } else {
+      this.clients = fullNodeUrls.map((fullNodeUrl) => {
+        const httpProvider = new HttpProvider(fullNodeUrl.http);
+        return new GearApi({ provider: httpProvider, noInitWarn: true });
+      });
     }
-
-    this.clients = fullNodeUrls.map((fullNodeUrl) => {
-      const httpProvider = new HttpProvider(fullNodeUrl.http);
-      return new GearApi({ provider: httpProvider, noInitWarn: true });
-    });
 
     this.currentFullNode = fullNodeUrls[0];
     this.currentClient = this.clients[0];
@@ -125,9 +131,9 @@ export class VaraInteractor {
 
   async structuredTransaction(
     signer: KeyringPair,
-    programId: HexString,
+    programId: string,
     payload: PayloadType,
-    metaHash?: string,
+    metadata: string,
     gasLimit?: number,
     value?: number
   ) {
@@ -135,18 +141,15 @@ export class VaraInteractor {
       try {
         await delay(1500);
 
-        if (metaHash === undefined) {
-          metaHash = await this.clients[clientIdx].program.metaHash(programId);
-        }
         const meta = ProgramMetadata.from(
-          metaHash
+          metadata
           // '00020000010000000001070000000100000000000000000109000000010a000000d5072c000c34656e67696e655f736368656d611c73746f726167652c536368656d614576656e7400010c245365745265636f72640c0004011c4163746f724964000010011c5665633c75383e000010011c5665633c75383e0000003044656c6574655265636f7264080004011c4163746f724964000010011c5665633c75383e000100205265676973746572040014015c5665633c284163746f7249642c205665633c75383e293e000200000410106773746418636f6d6d6f6e287072696d6974697665731c4163746f724964000004000801205b75383b2033325d000008000003200000000c000c0000050300100000020c0014000002180018000004080410001c0838656e67696e655f73797374656d733053797374656d416374696f6e0001080c41646400000038536574456e746974794c6576656c08002001107531323800002001107531323800010000200000050700240838656e67696e655f73797374656d731c5374617465496e000108404765744c6576656c4279456e746974790400200110753132380000004447657443757272656e74436f756e74657200010000280838656e67696e655f73797374656d732053746174654f75740001083843757272656e74436f756e746572040020011075313238000000344c6576656c4279456e7469747904002001107531323800010000'
         );
 
         if (gasLimit === undefined) {
           const gas = await this.clients[clientIdx].program.calculateGas.handle(
             decodeAddress(signer.address),
-            programId,
+            programId as HexString,
             payload,
             value,
             true,
@@ -160,7 +163,7 @@ export class VaraInteractor {
 
         const tx = await this.clients[clientIdx].message.send(
           {
-            destination: programId,
+            destination: programId as HexString,
             payload,
             gasLimit: gasLimit,
             value: value,
@@ -197,19 +200,13 @@ export class VaraInteractor {
     throw new Error('Failed to get metaHash with all fullnodes');
   }
 
-  async queryState(
-    programId: HexString,
-    payload: PayloadType,
-    metaHash?: string
-  ) {
+  async queryState(programId: string, payload: PayloadType, metadata: string) {
     for (const clientIdx in this.clients) {
       try {
         await delay(1500);
-        if (metaHash === undefined) {
-          metaHash = await this.clients[clientIdx].program.metaHash(programId);
-        }
+
         const meta = ProgramMetadata.from(
-          metaHash
+          metadata
           // '00020000010000000001070000000100000000000000000109000000010a000000d5072c000c34656e67696e655f736368656d611c73746f726167652c536368656d614576656e7400010c245365745265636f72640c0004011c4163746f724964000010011c5665633c75383e000010011c5665633c75383e0000003044656c6574655265636f7264080004011c4163746f724964000010011c5665633c75383e000100205265676973746572040014015c5665633c284163746f7249642c205665633c75383e293e000200000410106773746418636f6d6d6f6e287072696d6974697665731c4163746f724964000004000801205b75383b2033325d000008000003200000000c000c0000050300100000020c0014000002180018000004080410001c0838656e67696e655f73797374656d733053797374656d416374696f6e0001080c41646400000038536574456e746974794c6576656c08002001107531323800002001107531323800010000200000050700240838656e67696e655f73797374656d731c5374617465496e000108404765744c6576656c4279456e746974790400200110753132380000004447657443757272656e74436f756e74657200010000280838656e67696e655f73797374656d732053746174654f75740001083843757272656e74436f756e746572040020011075313238000000344c6576656c4279456e7469747904002001107531323800010000'
         );
         // console.log(meta.getAllTypes());

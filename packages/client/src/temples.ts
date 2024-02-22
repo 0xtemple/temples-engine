@@ -2,27 +2,30 @@
 
 import { VaraAccountManager } from './libs/varaAccountManager';
 import { VaraInteractor, getDefaultURL } from './libs/varaInteractor';
-// import type { ApiTypes, DecorateMethod } from '@polkadot/api/types';
+import type { SubmittableExtrinsic } from '@polkadot/api/submittable/types';
 
 import {
-  // ContractQuery,
-  // ContractTx,
-  DerivePathParams,
-  FaucetNetworkType,
+  ContractQuery,
+  ContractTx,
+  MapMessageQuery,
+  MapMessageTx,
+  MapMoudleFuncQuery,
+  MapMoudleFuncTx,
   TemplesParams,
   // SuiTxArgument,
   Network,
+  VaraFuncType,
 } from './types';
 import { GearApi, ProgramMetadata, HexString } from '@gear-js/api';
-import { AbiMessage } from '@polkadot/api-contract/types';
+// import { AbiMessage } from '@polkadot/api-contract/types';
 import { normalizeHexAddress, numberToAddressHex } from './utils';
 
 export function isUndefined(value?: unknown): value is undefined {
   return value === undefined;
 }
 
-export function withMeta<T extends { meta: AbiMessage }>(
-  meta: AbiMessage,
+export function withMeta<T extends { meta: VaraFuncType }>(
+  meta: VaraFuncType,
   creator: Omit<T, 'meta'>
 ): T {
   (creator as T).meta = meta;
@@ -30,51 +33,33 @@ export function withMeta<T extends { meta: AbiMessage }>(
   return creator as T;
 }
 
-// function createQuery(
-//   meta: AbiMessage,
-//   fn: (
-//     tx: TransactionBlock,
-//     params: (TransactionArgument | SerializedBcs<any>)[],
-//     typeArguments?: string[],
-//     isRaw?: boolean
-//   ) => Promise<DevInspectResults | TransactionResult>
-// ): ContractQuery {
-//   return withMeta(
-//     meta,
-//     async (
-//       tx: TransactionBlock,
-//       params: (TransactionArgument | SerializedBcs<any>)[],
-//       typeArguments?: string[],
-//       isRaw?: boolean
-//     ): Promise<DevInspectResults | TransactionResult> => {
-//       const result = await fn(tx, params, typeArguments, isRaw);
-//       return result;
-//     }
-//   );
-// }
+function createQuery(
+  meta: VaraFuncType,
+  fn: (params?: unknown[] | null) => any
+): ContractQuery {
+  return withMeta(meta, async (params?: unknown[] | null): Promise<any> => {
+    const result = await fn(params);
+    return result;
+  });
+}
 
-// function createTx(
-//   meta: SuiMoveMoudleFuncType,
-//   fn: (
-//     tx: TransactionBlock,
-//     params: (TransactionArgument | SerializedBcs<any>)[],
-//     typeArguments?: string[],
-//     isRaw?: boolean
-//   ) => Promise<SuiTransactionBlockResponse | TransactionResult>
-// ): ContractTx {
-//   return withMeta(
-//     meta,
-//     async (
-//       tx: TransactionBlock,
-//       params: (TransactionArgument | SerializedBcs<any>)[],
-//       typeArguments?: string[],
-//       isRaw?: boolean
-//     ): Promise<SuiTransactionBlockResponse | TransactionResult> => {
-//       // const result = await fn(tx, params, typeArguments, isRaw);
-//       return await fn(tx, params, typeArguments, isRaw);
-//     }
-//   );
-// }
+function createTx(
+  meta: VaraFuncType,
+  fn: (
+    params?: unknown[] | null,
+    isRaw?: boolean
+  ) => Promise<SubmittableExtrinsic>
+): ContractTx {
+  return withMeta(
+    meta,
+    async (
+      params?: unknown[] | null,
+      isRaw?: boolean
+    ): Promise<SubmittableExtrinsic> => {
+      return await fn(params, isRaw);
+    }
+  );
+}
 
 /**
  * @class Temples
@@ -83,12 +68,11 @@ export function withMeta<T extends { meta: AbiMessage }>(
 export class Temples {
   public accountManager: VaraAccountManager;
   public varaInteractor: VaraInteractor;
-  // public contractFactory: SuiContractFactory;
   public packageId: string | undefined;
-  public metadata: ProgramMetadata | undefined;
+  public metadata: string | undefined;
 
-  // readonly #query: MapMessageQuery = {};
-  // readonly #tx: MapMessageTx = {};
+  readonly #query: MapMoudleFuncQuery = {};
+  readonly #tx: MapMoudleFuncTx = {};
   /**
    * Support the following ways to init the ObeliskClient:
    * 1. mnemonics
@@ -107,7 +91,7 @@ export class Temples {
     networkType,
     fullnodeUrls,
     packageId,
-    metaHash,
+    metadata,
     connectWs,
   }: TemplesParams = {}) {
     // Init the account manager
@@ -123,39 +107,45 @@ export class Temples {
     );
 
     this.packageId = packageId;
-    if (metaHash !== undefined) {
-      const meta = ProgramMetadata.from(
-        metaHash
-        // '00020000010000000001070000000100000000000000000109000000010a000000d5072c000c34656e67696e655f736368656d611c73746f726167652c536368656d614576656e7400010c245365745265636f72640c0004011c4163746f724964000010011c5665633c75383e000010011c5665633c75383e0000003044656c6574655265636f7264080004011c4163746f724964000010011c5665633c75383e000100205265676973746572040014015c5665633c284163746f7249642c205665633c75383e293e000200000410106773746418636f6d6d6f6e287072696d6974697665731c4163746f724964000004000801205b75383b2033325d000008000003200000000c000c0000050300100000020c0014000002180018000004080410001c0838656e67696e655f73797374656d733053797374656d416374696f6e0001080c41646400000038536574456e746974794c6576656c08002001107531323800002001107531323800010000200000050700240838656e67696e655f73797374656d731c5374617465496e000108404765744c6576656c4279456e746974790400200110753132380000004447657443757272656e74436f756e74657200010000280838656e67696e655f73797374656d732053746174654f75740001083843757272656e74436f756e746572040020011075313238000000344c6576656c4279456e7469747904002001107531323800010000'
-      );
-      // console.log(meta.getAllTypes());
-      this.metadata = meta;
-
-      const allTypes = meta.getAllTypes();
+    if (metadata !== undefined) {
+      this.metadata = metadata;
+      const metaraw = ProgramMetadata.from(metadata);
+      const allTypes = metaraw.getAllTypes();
       const execMethodTypes = allTypes['EngineSystemsSystemAction'];
       // for (const [key, value] of Object.entries(queryMethodTypes)) {
       const execEnumObj = JSON.parse(execMethodTypes as string)._enum;
       console.log(execEnumObj);
       for (const [funcName, enumValue] of Object.entries(execEnumObj)) {
-        console.log(`  ${funcName}: ${enumValue}`);
+        const meta = {
+          funcName,
+          paramType: enumValue,
+        } as VaraFuncType;
+        if (isUndefined(this.#tx['contract'])) {
+          this.#tx['contract'] = {};
+        }
+        if (isUndefined(this.#tx['contract'][funcName])) {
+          this.#tx['contract'][funcName] = createTx(meta, (p, isRaw) =>
+            this.#exec(meta, p, isRaw)
+          );
+        }
       }
 
       const queryMethodTypes = allTypes['EngineSystemsStateIn'];
       const queryEnumObj = JSON.parse(queryMethodTypes as string)._enum;
-      console.log(queryEnumObj);
-      for (const [funcName, enumValue] of Object.entries(queryEnumObj)) {
-        console.log(`  ${funcName}: ${enumValue}`);
 
-        // if (isUndefined(this.#query['contract'])) {
-        //   this.#query['contract'] = {};
-        // }
-        // if (isUndefined(this.#query['contract'][funcName])) {
-        //   this.#query['contract'][funcName] = createQuery(
-        //     meta,
-        //     (tx, p, typeArguments, isRaw) =>
-        //       this.#read(meta, tx, p, typeArguments, isRaw)
-        //   );
-        // }
+      for (const [funcName, enumValue] of Object.entries(queryEnumObj)) {
+        const meta = {
+          funcName,
+          paramType: enumValue,
+        } as VaraFuncType;
+        if (isUndefined(this.#query['contract'])) {
+          this.#query['contract'] = {};
+        }
+        if (isUndefined(this.#query['contract'][funcName])) {
+          this.#query['contract'][funcName] = createQuery(meta, (p) =>
+            this.#read(meta, p)
+          );
+        }
       }
       // }
       // Object.values(metadata as SuiMoveNormalizedModules).forEach((value) => {
@@ -192,59 +182,55 @@ export class Temples {
     }
   }
 
-  // public get query(): MapMoudleFuncQuery {
-  //   return this.#query;
-  // }
+  public get query(): MapMoudleFuncQuery {
+    return this.#query;
+  }
 
-  // public get tx(): MapMoudleFuncTx {
-  //   return this.#tx;
-  // }
+  public get tx(): MapMoudleFuncTx {
+    return this.#tx;
+  }
 
-  // #exec = async (
-  //   meta: SuiMoveMoudleFuncType,
-  //   tx: TransactionBlock,
-  //   params: (TransactionArgument | SerializedBcs<any>)[],
-  //   typeArguments?: string[],
-  //   isRaw?: boolean
-  // ) => {
-  //   if (isRaw === true) {
-  //     return tx.moveCall({
-  //       target: `${this.contractFactory.packageId}::${meta.moduleName}::${meta.funcName}`,
-  //       arguments: params,
-  //       typeArguments,
-  //     });
-  //   }
+  #exec = async (
+    meta: VaraFuncType,
+    params?: unknown[] | null,
+    isRaw?: boolean
+  ) => {
+    if (params === undefined) {
+      params = null;
+    }
+    const payload = {
+      [meta.funcName]: params,
+    };
+    console.log(payload);
+    const account = await this.accountManager.getKeyPair();
+    const tx = await this.varaInteractor.structuredTransaction(
+      account,
+      this.packageId!,
+      payload,
+      this.metadata!
+    );
+    if (isRaw === true) {
+      console.log('---- not sign and send');
+      return tx;
+    }
+    console.log('end');
+    return await this.varaInteractor.signAndSend(account, tx);
+  };
 
-  //   tx.moveCall({
-  //     target: `${this.contractFactory.packageId}::${meta.moduleName}::${meta.funcName}`,
-  //     arguments: params,
-  //     typeArguments,
-  //   });
-  //   return await this.signAndSendTxn(tx);
-  // };
-
-  // #read = async (
-  //   meta: SuiMoveMoudleFuncType,
-  //   tx: TransactionBlock,
-  //   params: (TransactionArgument | SerializedBcs<any>)[],
-  //   typeArguments?: string[],
-  //   isRaw?: boolean
-  // ) => {
-  //   if (isRaw === true) {
-  //     return tx.moveCall({
-  //       target: `${this.contractFactory.packageId}::${meta.moduleName}::${meta.funcName}`,
-  //       arguments: params,
-  //       typeArguments,
-  //     });
-  //   }
-
-  //   tx.moveCall({
-  //     target: `${this.contractFactory.packageId}::${meta.moduleName}::${meta.funcName}`,
-  //     arguments: params,
-  //     typeArguments,
-  //   });
-  //   return await this.inspectTxn(tx);
-  // };
+  #read = async (meta: VaraFuncType, params?: unknown[] | null) => {
+    if (params === undefined) {
+      params = null;
+    }
+    const payload = {
+      [meta.funcName]: params,
+    };
+    let state = await this.varaInteractor.queryState(
+      this.packageId!,
+      payload,
+      this.metadata!
+    );
+    return state;
+  };
 
   /**
    * if derivePathParams is not provided or mnemonics is empty, it will return the keypair.
@@ -280,8 +266,12 @@ export class Temples {
     return this.packageId;
   }
 
-  async getMetadata(programId: HexString) {
+  async getMetaHash(programId: HexString) {
     return await this.varaInteractor.getMetaHash(programId);
+  }
+
+  getMetadata() {
+    return this.metadata;
   }
 
   async getBalance(account?: String) {
