@@ -7,7 +7,7 @@ const cwd = process.cwd();
 const renameFiles: Record<string, string | undefined> = {
   _gitignore: ".gitignore",
 };
-const defaultTargetDir = "templs-template-project";
+const defaultTargetDir = "temples-template-project";
 
 const init = async () => {
   const response = await prompts([

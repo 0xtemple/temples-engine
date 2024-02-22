@@ -1,3 +1,3 @@
-var templs = require('@0xtempl/aptos-client');
+var temples = require('@0xtempl/aptos-client');
 
-window.templs = templs;
+window.temples = temples;

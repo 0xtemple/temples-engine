@@ -4,17 +4,17 @@
   "description": "Common low level logic shared between packages",
   "keywords": [
     "sui",
-    "templs labs",
+    "temples labs",
     "move",
     "blockchain"
   ],
   "type": "module",
-  "author": "team@templs.build",
-  "homepage": "https://github.com/0xtempl/templs-engine/tree/main/packages/common#readme",
-  "bugs": "https://github.com/0xtempl/templs-engine/issues",
+  "author": "team@temples.build",
+  "homepage": "https://github.com/0xtempl/temples-engine/tree/main/packages/common#readme",
+  "bugs": "https://github.com/0xtempl/temples-engine/issues",
   "repository": {
     "type": "git",
-    "url": "https://github.com/0xtempl/templs-engine.git"
+    "url": "https://github.com/0xtempl/temples-engine.git"
   },
   "license": "Apache-2.0",
   "publishConfig": {

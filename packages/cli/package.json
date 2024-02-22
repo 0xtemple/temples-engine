@@ -4,17 +4,17 @@
   "description": "Tookit for interacting with vara eps framework",
   "keywords": [
     "sui",
-    "templs labs",
+    "temples labs",
     "move",
     "blockchain"
   ],
   "type": "module",
-  "author": "team@templs.build",
-  "homepage": "https://github.com/0xtempl/templs-engine/tree/main/packages/cli#readme",
-  "bugs": "https://github.com/0xtempl/templs-engine/issues",
+  "author": "team@temples.build",
+  "homepage": "https://github.com/0xtempl/temples-engine/tree/main/packages/cli#readme",
+  "bugs": "https://github.com/0xtempl/temples-engine/issues",
   "repository": {
     "type": "git",
-    "url": "https://github.com/0xtempl/templs-engine.git"
+    "url": "https://github.com/0xtempl/temples-engine.git"
   },
   "license": "Apache-2.0",
   "publishConfig": {
@@ -28,11 +28,11 @@
   },
   "types": "src/index.ts",
   "bin": {
-    "templs": "./dist/templs.js"
+    "temples": "./dist/temples.js"
   },
   "scripts": {
     "build": "pnpm run build:js",
-    "build:js": "tsup && chmod +x ./dist/templs.js",
+    "build:js": "tsup && chmod +x ./dist/temples.js",
     "clean": "pnpm run clean:js",
     "clean:js": "rimraf dist",
     "dev": "tsup --watch",

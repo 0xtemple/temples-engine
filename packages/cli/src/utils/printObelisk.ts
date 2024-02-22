@@ -3,8 +3,8 @@ import chalk from "chalk";
 export function printObelisk() {
   console.log(
     chalk.yellow(`
-Welcome to templs world
-\t\t\t --from team@templs
+Welcome to temples world
+\t\t\t --from team@temples
  ________  ________  _______   ___       ___  ________  ___  __       
 |\\   __  \\|\\   __  \\|\\  ___ \\ |\\  \\     |\\  \\|\\   ____\\|\\  \\|\\  \\     
 \\ \\  \\|\\  \\ \\  \\|\\ /\\ \\   __/|\\ \\  \\    \\ \\  \\ \\  \\___|\\ \\  \\/  /|_   

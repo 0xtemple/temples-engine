@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "pnpm run build.sui && pnpm run build.aptos",
-    "build.sui": "browserify sui.js -p esmify >  ../templs-cocos-template/assets/lib/templs.js",
-    "build.aptos": "browserify aptos.js -p esmify >  ../templs-cocos-template/assets/lib/templs.js"
+    "build.sui": "browserify sui.js -p esmify >  ../temples-cocos-template/assets/lib/temples.js",
+    "build.aptos": "browserify aptos.js -p esmify >  ../temples-cocos-template/assets/lib/temples.js"
   },
   "keywords": [],
   "author": "team@0xtempl.com",

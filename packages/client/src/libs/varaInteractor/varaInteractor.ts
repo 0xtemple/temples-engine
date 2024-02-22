@@ -3,13 +3,30 @@ import {
   MessageSendOptions,
   PayloadType,
   HexString,
+  GearKeyring,
+  decodeAddress,
 } from '@gear-js/api';
-
+import { blake2AsHex } from '@polkadot/util-crypto';
+// import { SubmittableExtrinsic } from '@polkadot/api/types';
+import type { SubmittableExtrinsic } from '@polkadot/api/submittable/types';
+import { ISubmittableResult } from '@polkadot/types/types';
 import { FaucetNetworkType, Network } from '../../types';
 // import { SuiOwnedObject, SuiSharedObject } from '../suiModel';
 import { delay } from './util';
-import Keyring from '@polkadot/keyring';
-import { ProgramMetadata } from '@gear-js/api';
+import { Keyring } from '@polkadot/keyring';
+import { ProgramMetadata, GearProgram } from '@gear-js/api';
+import { ApiPromise, WsProvider } from '@polkadot/api';
+import { metadata } from '@polkadot/types/interfaces/essentials';
+import { KeyringPair } from '@polkadot/keyring/types';
+
+function hexToBinary(hex: string): string {
+  let binaryString = '';
+  for (let i = 0; i < hex.length; i++) {
+    const bin = parseInt(hex[i], 16).toString(2).padStart(4, '0');
+    binaryString += bin;
+  }
+  return binaryString;
+}
 
 /**
  * `SuiTransactionSender` is used to send transaction with a given gas coin.
@@ -19,6 +36,9 @@ import { ProgramMetadata } from '@gear-js/api';
 export class VaraInteractor {
   public readonly clients: GearApi[];
   public currentClient: GearApi;
+  public readonly polkadotProviders: WsProvider[];
+  public polkadotProvider: WsProvider;
+  public polkadotApi: Promise<ApiPromise>;
   public readonly fullNodes: string[];
   public currentFullNode: string;
 
@@ -33,6 +53,12 @@ export class VaraInteractor {
     );
     this.currentFullNode = fullNodeUrls[0];
     this.currentClient = this.clients[0];
+
+    this.polkadotProviders = fullNodeUrls.map(
+      (providerAddress) => new WsProvider(providerAddress)
+    );
+    this.polkadotProvider = this.polkadotProviders[0];
+    this.polkadotApi = ApiPromise.create({ provider: this.polkadotProvider });
     this.network = network;
   }
 
@@ -69,35 +95,12 @@ export class VaraInteractor {
 
   async signAndSend(
     signer: Keyring,
-    destination: HexString,
-    payload: PayloadType,
-    gasLimit: number | undefined,
-    value: number | undefined
+    // programId: HexString,
+    tx: SubmittableExtrinsic
   ) {
     for (const clientIdx in this.clients) {
       try {
-        const message: MessageSendOptions = {
-          destination, // programId
-          payload,
-          gasLimit: gasLimit ? gasLimit : 10000000,
-          value: value ? value : 1000,
-          // prepaid: true,
-          // account: accountId,
-          // if you send message with issued voucher
-        };
-        const meta = ProgramMetadata.from(destination);
-
-        // In that case payload will be encoded using meta.types.handle.input type
-        let extrinsic = this.clients[clientIdx].message.send(message, meta);
-        // So if you want to use another type you can specify it
-
-        extrinsic = this.clients[clientIdx].message.send(
-          message,
-          meta
-          // meta.types.handle.input
-        );
-        // return extrinsic;
-        return await extrinsic.signAndSend(signer, (event: any) => {
+        return await tx.signAndSend(signer, (event: any) => {
           console.log(event.toHuman());
         });
       } catch (err) {
@@ -108,6 +111,112 @@ export class VaraInteractor {
       }
     }
     throw new Error('Failed to send transaction with all fullnodes');
+  }
+
+  async structuredTransaction(
+    signer: KeyringPair,
+    programId: HexString,
+    payload: PayloadType,
+    metaHash?: string,
+    gasLimit?: number,
+    value?: number
+  ) {
+    for (const clientIdx in this.clients) {
+      try {
+        await delay(1500);
+
+        if (metaHash === undefined) {
+          metaHash = await this.clients[clientIdx].program.metaHash(programId);
+        }
+        const meta = ProgramMetadata.from(
+          metaHash
+          // '00020000010000000001070000000100000000000000000109000000010a000000d5072c000c34656e67696e655f736368656d611c73746f726167652c536368656d614576656e7400010c245365745265636f72640c0004011c4163746f724964000010011c5665633c75383e000010011c5665633c75383e0000003044656c6574655265636f7264080004011c4163746f724964000010011c5665633c75383e000100205265676973746572040014015c5665633c284163746f7249642c205665633c75383e293e000200000410106773746418636f6d6d6f6e287072696d6974697665731c4163746f724964000004000801205b75383b2033325d000008000003200000000c000c0000050300100000020c0014000002180018000004080410001c0838656e67696e655f73797374656d733053797374656d416374696f6e0001080c41646400000038536574456e746974794c6576656c08002001107531323800002001107531323800010000200000050700240838656e67696e655f73797374656d731c5374617465496e000108404765744c6576656c4279456e746974790400200110753132380000004447657443757272656e74436f756e74657200010000280838656e67696e655f73797374656d732053746174654f75740001083843757272656e74436f756e746572040020011075313238000000344c6576656c4279456e7469747904002001107531323800010000'
+        );
+
+        if (gasLimit === undefined) {
+          const gas = await this.clients[clientIdx].program.calculateGas.handle(
+            decodeAddress(signer.address),
+            programId,
+            payload,
+            value,
+            true,
+            meta
+          );
+          gasLimit = gas.min_limit;
+        }
+        if (value === undefined) {
+          value = 20000;
+        }
+
+        const tx = await this.clients[clientIdx].message.send(
+          {
+            destination: programId,
+            payload,
+            gasLimit: gasLimit,
+            value: value,
+          },
+          meta
+        );
+
+        return tx;
+      } catch (err) {
+        console.warn(
+          `Failed to structured transaction with fullnode ${this.fullNodes[clientIdx]}: ${err}`
+        );
+        await delay(2000);
+      }
+    }
+    throw new Error('Failed to structured transaction with all fullnodes');
+  }
+
+  async getMetaHash(programId: HexString) {
+    for (const clientIdx in this.clients) {
+      try {
+        await delay(1500);
+        const metaHash = await this.clients[clientIdx].program.metaHash(
+          programId
+        );
+        return metaHash;
+      } catch (err) {
+        console.warn(
+          `Failed to get metaHash with fullnode ${this.fullNodes[clientIdx]}: ${err}`
+        );
+        await delay(2000);
+      }
+    }
+    throw new Error('Failed to get metaHash with all fullnodes');
+  }
+
+  async queryState(programId: HexString, metaHash?: string) {
+    for (const clientIdx in this.clients) {
+      try {
+        await delay(1500);
+        if (metaHash === undefined) {
+          metaHash = await this.clients[clientIdx].program.metaHash(programId);
+        }
+        const meta = ProgramMetadata.from(
+          metaHash
+          // '00020000010000000001070000000100000000000000000109000000010a000000d5072c000c34656e67696e655f736368656d611c73746f726167652c536368656d614576656e7400010c245365745265636f72640c0004011c4163746f724964000010011c5665633c75383e000010011c5665633c75383e0000003044656c6574655265636f7264080004011c4163746f724964000010011c5665633c75383e000100205265676973746572040014015c5665633c284163746f7249642c205665633c75383e293e000200000410106773746418636f6d6d6f6e287072696d6974697665731c4163746f724964000004000801205b75383b2033325d000008000003200000000c000c0000050300100000020c0014000002180018000004080410001c0838656e67696e655f73797374656d733053797374656d416374696f6e0001080c41646400000038536574456e746974794c6576656c08002001107531323800002001107531323800010000200000050700240838656e67696e655f73797374656d731c5374617465496e000108404765744c6576656c4279456e746974790400200110753132380000004447657443757272656e74436f756e74657200010000280838656e67696e655f73797374656d732053746174654f75740001083843757272656e74436f756e746572040020011075313238000000344c6576656c4279456e7469747904002001107531323800010000'
+        );
+        // console.log(meta.getAllTypes());
+        const state = await this.clients[clientIdx].programState.read(
+          {
+            programId: programId as HexString,
+            payload: {
+              GetCurrentCounter: null,
+            },
+          },
+          meta
+        );
+        return state.toHuman();
+      } catch (err) {
+        console.warn(
+          `Failed to get metaHash with fullnode ${this.fullNodes[clientIdx]}: ${err}`
+        );
+        await delay(2000);
+      }
+    }
+    throw new Error('Failed to get metaHash with all fullnodes');
   }
 
   // async getObjects(

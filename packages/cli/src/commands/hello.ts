@@ -4,7 +4,7 @@ import { printObelisk } from "../utils";
 const commandModule: CommandModule = {
   command: "hello",
 
-  describe: "hello, templs",
+  describe: "hello, temples",
 
   builder(yargs) {
     return yargs;

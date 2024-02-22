@@ -8,12 +8,12 @@ import os from "os";
 
 // In order of preference files are checked
 const configFiles = [
-  "templs.config.js",
-  "templs.config.mjs",
-  "templs.config.ts",
-  "templs.config.mts",
+  "temples.config.js",
+  "temples.config.mjs",
+  "temples.config.ts",
+  "temples.config.mts",
 ];
-const TEMP_CONFIG = "templs.config.example.mjs";
+const TEMP_CONFIG = "temples.config.example.mjs";
 
 export async function loadConfig(configPath?: string): Promise<unknown> {
   configPath = await resolveConfigPath(configPath);

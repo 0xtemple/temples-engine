@@ -1,9 +1,9 @@
-# create-templs
+# create-temples
 
-Create a new Templs project
+Create a new Temples project
 
 ### How to use
 
 ```bash
-pnpm create templs
+pnpm create temples
 ```

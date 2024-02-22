@@ -1,115 +1,39 @@
 import {
-  Templs,
-  NetworkType,
-  TransactionResult,
-  loadMetadata,
+  Temples,
+  Network,
+  // NetworkType,
+  // TransactionResult,
+  // loadMetadata,
 } from '../src/index';
 import * as process from 'process';
 import dotenv from 'dotenv';
 dotenv.config();
 
 async function init() {
-  const network = 'devnet';
+  const network = Network.TESTNET;
   const packageId =
-    '0xdd1a5cabd1b187dfef39a7c04b2e112ad999ec46f521a408db89297b7973b6c6';
-
-  const metadata = await loadMetadata(network as NetworkType, packageId);
+    '0x2ef238dc49a7c63bc87549f6b084123a35953265d7028a30ad53fc004b892c26';
 
   const privateKey = process.env.PRIVATE_KEY;
+  const metaHash =
+    '00020000010000000001070000000100000000000000000109000000010a000000d5072c000c34656e67696e655f736368656d611c73746f726167652c536368656d614576656e7400010c245365745265636f72640c0004011c4163746f724964000010011c5665633c75383e000010011c5665633c75383e0000003044656c6574655265636f7264080004011c4163746f724964000010011c5665633c75383e000100205265676973746572040014015c5665633c284163746f7249642c205665633c75383e293e000200000410106773746418636f6d6d6f6e287072696d6974697665731c4163746f724964000004000801205b75383b2033325d000008000003200000000c000c0000050300100000020c0014000002180018000004080410001c0838656e67696e655f73797374656d733053797374656d416374696f6e0001080c41646400000038536574456e746974794c6576656c08002001107531323800002001107531323800010000200000050700240838656e67696e655f73797374656d731c5374617465496e000108404765744c6576656c4279456e746974790400200110753132380000004447657443757272656e74436f756e74657200010000280838656e67696e655f73797374656d732053746174654f75740001083843757272656e74436f756e746572040020011075313238000000344c6576656c4279456e7469747904002001107531323800010000';
 
-  const templs = new Templs({
-    networkType: network as NetworkType,
+  const temples = new Temples({
+    networkType: network,
     packageId: packageId,
-    metadata: metadata,
+    metaHash: metaHash,
     secretKey: privateKey,
   });
 
-  console.log(templs.getAddress());
+  // console.log(await temples.getAddress());
+  let addr = await temples.getAddress();
+  console.log('address: ' + addr);
 
-  // let txb = new TransactionBlock();
+  let metadata = await temples.getMetadata(packageId);
+  console.log('metadata: ' + metadata);
 
-  // const [coin] = txb.splitCoins(txb.gas, [txb.pure(2n * MIST_PER_SUI)]);
-  // const params = [coin];
-
-  // let [coins] = (await templs.tx.example_system.get_object(
-  //   txb,
-  //   params,
-  //   undefined,
-  //   true
-  // )) as TransactionResult;
-  // txb.transferObjects(
-  //   [coins],
-  //   txb.pure(
-  //     '0xd2c36eea220c7deb9d1c7d4b01269eca9d9543050255432896cd13ade6550d90'
-  //   )
-  // );
-  // let res = await templs.signAndSendTxn(txb);
-  // console.log(res);
-  let comsName = await templs.listSchemaNames(
-    '0xacfec03b65c34a4afff82e0913e00759e5c799fbcbbd4bdf6299de4749766304'
-  );
-
-  console.log(comsName);
-
-  // let entities = await templs.getEntities(
-  //   '0x1541f3a2e7ac48e3e68e60bb97a7cee94e16316cc3f9043a9c0f5e6790ea3af0',
-  //   'multi_column'
-  // );
-  // console.log(entities);
-
-  // let entityData = await templs.getEntity(
-  //   '0xdca3675091c8fdccd4fb46f9f70de0bd65053fbc8104600daf86a959ca9b7120',
-  //   'single_value'
-  // );
-  // console.log(entityData);
-
-  // // let tx = new TransactionBlock();
-
-  // // let params = [
-  // //   tx.pure(
-  // //     '0xdca3675091c8fdccd4fb46f9f70de0bd65053fbc8104600daf86a959ca9b7120'
-  // //   ),
-  // // ];
-  // // let inc_res = await templs.tx.example_system.increase(tx, params);
-  // // console.log(inc_res);
-
-  // let txb = new TransactionBlock();
-
-  // let params = [
-  //   txb.pure(
-  //     '0xdca3675091c8fdccd4fb46f9f70de0bd65053fbc8104600daf86a959ca9b7120'
-  //   ),
-  //   txb.pure(
-  //     '0x6761ca73d8793006a3d0ac74ed2ad541487d4010c706f7c6d0d41d96eff9e4cf'
-  //   ),
-  // ];
-
-  // let typeArguments = ['0x2::coin::Coin<0x2::sui::SUI>'];
-  // let inc_with_type_res = await templs.tx.example_system.increase_with_type(
-  //   txb,
-  //   params,
-  //   typeArguments
-  // );
-  // console.log(inc_with_type_res);
-
-  // let containData = await templs.containEntity(
-  //   '0x9f2b0bd5153799eb97c8d604472f0993a10586ce6725cdeb175b02dedc2dd10a',
-  //   'position',
-  //   '0x59a5fbf2c56da3a4a2ac761f062cb0e8ed6c6cb1812136178cf2321586736cc7'
-  // );
-
-  // console.log(containData);
-
-  // let objectAddress = await templs.entity_key_from_object(
-  //   '0x1541f3a2e7ac48e3e68e60bb97a7cee94e16316cc3f9043a9c0f5e6790ea3af0'
-  // );
-  // console.log(objectAddress);
-
-  // let bytesAddress = await templs.entity_key_from_bytes('hello');
-  // console.log(bytesAddress);
-
-  // let numberAddress = await templs.entity_key_from_u256(123);
-  // console.log(numberAddress);
+  let data = await temples.varaInteractor.queryState(packageId, metaHash);
+  console.log('data: ', data);
 }
 
 init();
