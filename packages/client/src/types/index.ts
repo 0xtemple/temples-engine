@@ -36,14 +36,19 @@ import { ProgramMetadata } from '@gear-js/api';
 //   type: string;
 // };
 
+export type NodeUrlType = {
+  ws: string;
+  http: string;
+};
+
 export type TemplesParams = {
   mnemonics?: string;
   secretKey?: string;
-  fullnodeUrls?: string[];
-  faucetUrl?: string;
+  fullnodeUrls?: NodeUrlType[];
   networkType?: Network;
   packageId?: string;
   metaHash?: string;
+  connectWs?: boolean;
 };
 
 export type SchemaFieldType = {

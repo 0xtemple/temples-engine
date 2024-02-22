@@ -16,7 +16,6 @@ import {
 import { GearApi, ProgramMetadata, HexString } from '@gear-js/api';
 import { AbiMessage } from '@polkadot/api-contract/types';
 import { normalizeHexAddress, numberToAddressHex } from './utils';
-import keccak256 from 'keccak256';
 
 export function isUndefined(value?: unknown): value is undefined {
   return value === undefined;
@@ -88,8 +87,8 @@ export class Temples {
   public packageId: string | undefined;
   public metadata: ProgramMetadata | undefined;
 
-  readonly #query: MapMessageQuery = {};
-  readonly #tx: MapMessageTx = {};
+  // readonly #query: MapMessageQuery = {};
+  // readonly #tx: MapMessageTx = {};
   /**
    * Support the following ways to init the ObeliskClient:
    * 1. mnemonics
@@ -109,14 +108,19 @@ export class Temples {
     fullnodeUrls,
     packageId,
     metaHash,
+    connectWs,
   }: TemplesParams = {}) {
     // Init the account manager
     this.accountManager = new VaraAccountManager({ mnemonics, secretKey });
     // Init the rpc provider
     fullnodeUrls = fullnodeUrls || [
-      getDefaultURL(networkType ?? Network.MAINNET).fullNode,
+      getDefaultURL(networkType ?? Network.MAINNET),
     ];
-    this.varaInteractor = new VaraInteractor(fullnodeUrls, networkType);
+    this.varaInteractor = new VaraInteractor(
+      fullnodeUrls,
+      networkType,
+      connectWs
+    );
 
     this.packageId = packageId;
     if (metaHash !== undefined) {
@@ -142,16 +146,16 @@ export class Temples {
       for (const [funcName, enumValue] of Object.entries(queryEnumObj)) {
         console.log(`  ${funcName}: ${enumValue}`);
 
-        if (isUndefined(this.#query['contract'])) {
-          this.#query['contract'] = {};
-        }
-        if (isUndefined(this.#query['contract'][funcName])) {
-          this.#query['contract'][funcName] = createQuery(
-            meta,
-            (tx, p, typeArguments, isRaw) =>
-              this.#read(meta, tx, p, typeArguments, isRaw)
-          );
-        }
+        // if (isUndefined(this.#query['contract'])) {
+        //   this.#query['contract'] = {};
+        // }
+        // if (isUndefined(this.#query['contract'][funcName])) {
+        //   this.#query['contract'][funcName] = createQuery(
+        //     meta,
+        //     (tx, p, typeArguments, isRaw) =>
+        //       this.#read(meta, tx, p, typeArguments, isRaw)
+        //   );
+        // }
       }
       // }
       // Object.values(metadata as SuiMoveNormalizedModules).forEach((value) => {
@@ -188,59 +192,59 @@ export class Temples {
     }
   }
 
-  public get query(): MapMoudleFuncQuery {
-    return this.#query;
-  }
+  // public get query(): MapMoudleFuncQuery {
+  //   return this.#query;
+  // }
 
-  public get tx(): MapMoudleFuncTx {
-    return this.#tx;
-  }
+  // public get tx(): MapMoudleFuncTx {
+  //   return this.#tx;
+  // }
 
-  #exec = async (
-    meta: SuiMoveMoudleFuncType,
-    tx: TransactionBlock,
-    params: (TransactionArgument | SerializedBcs<any>)[],
-    typeArguments?: string[],
-    isRaw?: boolean
-  ) => {
-    if (isRaw === true) {
-      return tx.moveCall({
-        target: `${this.contractFactory.packageId}::${meta.moduleName}::${meta.funcName}`,
-        arguments: params,
-        typeArguments,
-      });
-    }
+  // #exec = async (
+  //   meta: SuiMoveMoudleFuncType,
+  //   tx: TransactionBlock,
+  //   params: (TransactionArgument | SerializedBcs<any>)[],
+  //   typeArguments?: string[],
+  //   isRaw?: boolean
+  // ) => {
+  //   if (isRaw === true) {
+  //     return tx.moveCall({
+  //       target: `${this.contractFactory.packageId}::${meta.moduleName}::${meta.funcName}`,
+  //       arguments: params,
+  //       typeArguments,
+  //     });
+  //   }
 
-    tx.moveCall({
-      target: `${this.contractFactory.packageId}::${meta.moduleName}::${meta.funcName}`,
-      arguments: params,
-      typeArguments,
-    });
-    return await this.signAndSendTxn(tx);
-  };
+  //   tx.moveCall({
+  //     target: `${this.contractFactory.packageId}::${meta.moduleName}::${meta.funcName}`,
+  //     arguments: params,
+  //     typeArguments,
+  //   });
+  //   return await this.signAndSendTxn(tx);
+  // };
 
-  #read = async (
-    meta: SuiMoveMoudleFuncType,
-    tx: TransactionBlock,
-    params: (TransactionArgument | SerializedBcs<any>)[],
-    typeArguments?: string[],
-    isRaw?: boolean
-  ) => {
-    if (isRaw === true) {
-      return tx.moveCall({
-        target: `${this.contractFactory.packageId}::${meta.moduleName}::${meta.funcName}`,
-        arguments: params,
-        typeArguments,
-      });
-    }
+  // #read = async (
+  //   meta: SuiMoveMoudleFuncType,
+  //   tx: TransactionBlock,
+  //   params: (TransactionArgument | SerializedBcs<any>)[],
+  //   typeArguments?: string[],
+  //   isRaw?: boolean
+  // ) => {
+  //   if (isRaw === true) {
+  //     return tx.moveCall({
+  //       target: `${this.contractFactory.packageId}::${meta.moduleName}::${meta.funcName}`,
+  //       arguments: params,
+  //       typeArguments,
+  //     });
+  //   }
 
-    tx.moveCall({
-      target: `${this.contractFactory.packageId}::${meta.moduleName}::${meta.funcName}`,
-      arguments: params,
-      typeArguments,
-    });
-    return await this.inspectTxn(tx);
-  };
+  //   tx.moveCall({
+  //     target: `${this.contractFactory.packageId}::${meta.moduleName}::${meta.funcName}`,
+  //     arguments: params,
+  //     typeArguments,
+  //   });
+  //   return await this.inspectTxn(tx);
+  // };
 
   /**
    * if derivePathParams is not provided or mnemonics is empty, it will return the keypair.
@@ -284,13 +288,15 @@ export class Temples {
     if (account === undefined) {
       account = await this.accountManager.getAddress();
     }
-    return (await this.varaInteractor.polkadotApi).query.system.account(
-      account
-    );
+    return await this.varaInteractor.queryBalance(account);
   }
 
   client() {
     return this.varaInteractor.currentClient;
+  }
+
+  wsProvider() {
+    return this.varaInteractor.wsApi;
   }
 
   // async signTxn(

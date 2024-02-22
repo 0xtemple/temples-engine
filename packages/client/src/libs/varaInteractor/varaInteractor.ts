@@ -10,12 +10,12 @@ import { blake2AsHex } from '@polkadot/util-crypto';
 // import { SubmittableExtrinsic } from '@polkadot/api/types';
 import type { SubmittableExtrinsic } from '@polkadot/api/submittable/types';
 import { ISubmittableResult } from '@polkadot/types/types';
-import { FaucetNetworkType, Network } from '../../types';
+import { FaucetNetworkType, Network, NodeUrlType } from '../../types';
 // import { SuiOwnedObject, SuiSharedObject } from '../suiModel';
 import { delay } from './util';
 import { Keyring } from '@polkadot/keyring';
 import { ProgramMetadata, GearProgram } from '@gear-js/api';
-import { ApiPromise, WsProvider } from '@polkadot/api';
+import { ApiPromise, WsProvider, HttpProvider } from '@polkadot/api';
 import { metadata } from '@polkadot/types/interfaces/essentials';
 import { KeyringPair } from '@polkadot/keyring/types';
 
@@ -36,29 +36,39 @@ function hexToBinary(hex: string): string {
 export class VaraInteractor {
   public readonly clients: GearApi[];
   public currentClient: GearApi;
-  public readonly polkadotProviders: WsProvider[];
-  public polkadotProvider: WsProvider;
-  public polkadotApi: Promise<ApiPromise>;
-  public readonly fullNodes: string[];
-  public currentFullNode: string;
+  public readonly fullNodes: NodeUrlType[];
+  public currentFullNode: NodeUrlType;
 
+  public readonly wsProviders?: WsProvider[];
+  public wsProvider?: WsProvider;
+  public wsApi?: Promise<ApiPromise>;
   public network?: Network;
 
-  constructor(fullNodeUrls: string[], network?: Network) {
+  constructor(
+    fullNodeUrls: NodeUrlType[],
+    network?: Network,
+    connectWs?: boolean
+  ) {
     if (fullNodeUrls.length === 0)
       throw new Error('fullNodeUrls must not be empty');
     this.fullNodes = fullNodeUrls;
-    this.clients = fullNodeUrls.map(
-      (providerAddress) => new GearApi({ providerAddress })
-    );
+
+    if (connectWs === true) {
+      this.wsProviders = fullNodeUrls.map(
+        (providerAddress) => new WsProvider(providerAddress.ws)
+      );
+      this.wsProvider = this.wsProviders[0];
+      this.wsApi = ApiPromise.create({ provider: this.wsProvider });
+    }
+
+    this.clients = fullNodeUrls.map((fullNodeUrl) => {
+      const httpProvider = new HttpProvider(fullNodeUrl.http);
+      return new GearApi({ provider: httpProvider, noInitWarn: true });
+    });
+
     this.currentFullNode = fullNodeUrls[0];
     this.currentClient = this.clients[0];
 
-    this.polkadotProviders = fullNodeUrls.map(
-      (providerAddress) => new WsProvider(providerAddress)
-    );
-    this.polkadotProvider = this.polkadotProviders[0];
-    this.polkadotApi = ApiPromise.create({ provider: this.polkadotProvider });
     this.network = network;
   }
 
@@ -94,7 +104,7 @@ export class VaraInteractor {
   }
 
   async signAndSend(
-    signer: Keyring,
+    signer: KeyringPair,
     // programId: HexString,
     tx: SubmittableExtrinsic
   ) {
@@ -145,7 +155,7 @@ export class VaraInteractor {
           gasLimit = gas.min_limit;
         }
         if (value === undefined) {
-          value = 20000;
+          value = 10000000000000;
         }
 
         const tx = await this.clients[clientIdx].message.send(
@@ -187,7 +197,11 @@ export class VaraInteractor {
     throw new Error('Failed to get metaHash with all fullnodes');
   }
 
-  async queryState(programId: HexString, metaHash?: string) {
+  async queryState(
+    programId: HexString,
+    payload: PayloadType,
+    metaHash?: string
+  ) {
     for (const clientIdx in this.clients) {
       try {
         await delay(1500);
@@ -202,9 +216,10 @@ export class VaraInteractor {
         const state = await this.clients[clientIdx].programState.read(
           {
             programId: programId as HexString,
-            payload: {
-              GetCurrentCounter: null,
-            },
+            payload,
+            // payload: {
+            //   GetCurrentCounter: null,
+            // },
           },
           meta
         );
@@ -219,6 +234,22 @@ export class VaraInteractor {
     throw new Error('Failed to get metaHash with all fullnodes');
   }
 
+  async queryBalance(addr: String) {
+    for (const clientIdx in this.clients) {
+      try {
+        let balances_amount = await this.clients[
+          clientIdx
+        ].query.system.account(addr);
+        return balances_amount.toHuman();
+      } catch (err) {
+        console.warn(
+          `Failed to query(${addr}) balance with fullnode ${this.fullNodes[clientIdx]}: ${err}`
+        );
+        await delay(2000);
+      }
+    }
+    throw new Error(`Failed to query(${addr}) balance with all fullnodes`);
+  }
   // async getObjects(
   //   ids: string[],
   //   options?: SuiObjectDataOptions

@@ -1,9 +1,11 @@
 import {
   Temples,
+  PayloadType,
   Network,
   // NetworkType,
   // TransactionResult,
   // loadMetadata,
+  decodeAddress,
 } from '../src/index';
 import * as process from 'process';
 import dotenv from 'dotenv';
@@ -23,17 +25,44 @@ async function init() {
     packageId: packageId,
     metaHash: metaHash,
     secretKey: privateKey,
+    // connectWs: true,
   });
 
   // console.log(await temples.getAddress());
   let addr = await temples.getAddress();
   console.log('address: ' + addr);
+  console.log('decodeAddress: ', decodeAddress(addr));
 
   let metadata = await temples.getMetadata(packageId);
   console.log('metadata: ' + metadata);
 
-  let data = await temples.varaInteractor.queryState(packageId, metaHash);
+  let payload = {
+    GetCurrentCounter: null,
+  };
+  let data = await temples.varaInteractor.queryState(
+    packageId,
+    payload,
+    metaHash
+  );
   console.log('data: ', data);
+
+  let balance_data = await temples.getBalance();
+  console.log(balance_data);
+
+  // let payload = {
+  //   Add: null,
+  // } as PayloadType;
+  // let account = await temples.accountManager.getKeyPair();
+  // let tx = await temples.varaInteractor.structuredTransaction(
+  //   account,
+  //   packageId,
+  //   payload,
+  //   metaHash
+  // );
+  // await temples.varaInteractor.signAndSend(account, tx);
+
+  // let datares = await temples.varaInteractor.queryState(packageId, metaHash);
+  // console.log('data: ', datares);
 }
 
 init();
