@@ -1,21 +1,24 @@
-import { ObeliskConfig } from "../../types";
-import { formatAndWriteMove } from "../formatAndWrite";
+import { writeToml} from "../formatAndWrite";
 
-export function generateToml(config: ObeliskConfig, srcPrefix: string) {
-  let code = `[package]
-name = "${config.name}"
-version = "0.0.1"
+export function generateMetaDataToml(name: string, path: string) {
+  let code =
+`[package]
+name = "${name}-metadata"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "testnet-v1.17.0" }
-
-[addresses]
-sui =  "0x2"
-${config.name} = "0x0"
+engine-systems = { path = "../systems" }
+engine-schema = { path = "../schema" }
+gstd = { git = "https://github.com/gear-tech/gear.git", tag = "v1.1.1", features = ["debug"] }
+gmeta = { git = "https://github.com/gear-tech/gear", tag = "v1.1.1" }
 `;
-  formatAndWriteMove(
+  writeToml(
     code,
-    `${srcPrefix}/contracts/${config.name}/Move.toml`,
-    "formatAndWriteMove"
+    `${path}/contracts/metadata/Cargo.toml`,
+    "writeToml"
   );
 }
+

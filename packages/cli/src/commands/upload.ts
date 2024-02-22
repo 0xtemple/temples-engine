@@ -9,9 +9,9 @@ type Options = {
 };
 
 const commandModule: CommandModule<Options, Options> = {
-  command: "publish",
+  command: "upload",
 
-  describe: "Publish templs move contracts",
+  describe: "Upload templs rust contracts",
 
   builder(yargs) {
     return yargs.options({

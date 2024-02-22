@@ -26,7 +26,7 @@ export function capitalizeFirstLetter(input: string): string {
 export function convertToCamelCase(str: string): string {
   str = str.charAt(0).toUpperCase() + str.slice(1);
   let result = str.replace(/(_\w)/g, (match) => match[1].toUpperCase());
-  return result + "Data";
+  return result;
 }
 
 /**

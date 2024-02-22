@@ -1,4 +1,4 @@
-import { formatAndWriteMove } from "@0xtempl/common";
+import { formatAndWriteRust } from "@0xtempl/common";
 
 type SchemaMapType = Record<string, string>;
 type SchemaValueType = string;
@@ -106,10 +106,10 @@ async function init() {
         bag::length(get_mut_schemas(entity))
     }
 }`;
-  let a = formatAndWriteMove(
+  let a = formatAndWriteRust(
     output,
     "/Users/feng/Desktop/templs/templs-engine/packages/cli",
-    "formatAndWriteMove"
+    "formatAndWriteRust"
   );
   // console.log(output)
 }
