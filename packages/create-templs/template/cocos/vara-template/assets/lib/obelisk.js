@@ -2712,7 +2712,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 var _exportNames = {
   MultiSigClient: true,
-  Templs: true,
+  Temples: true,
   SuiAccountManager: true,
   SuiContractFactory: true,
   SuiTxBlock: true,
@@ -2733,7 +2733,7 @@ Object.defineProperty(exports, "Ed25519Keypair", {
     return _ed.Ed25519Keypair;
   }
 });
-exports.SuiTxBlock = exports.SuiContractFactory = exports.SuiAccountManager = exports.Templs = exports.MultiSigClient = void 0;
+exports.SuiTxBlock = exports.SuiContractFactory = exports.SuiAccountManager = exports.Temples = exports.MultiSigClient = void 0;
 Object.defineProperty(exports, "getSuiMoveConfig", {
   enumerable: true,
   get: function () {
@@ -2800,7 +2800,7 @@ var __privateAdd = (obj, member, value) => {
 
 // src/index.ts
 
-// src/templs.ts
+// src/temples.ts
 
 // src/libs/suiAccountManager/index.ts
 
@@ -3580,7 +3580,7 @@ function numberToAddressHex(num) {
   return paddedHex;
 }
 
-// src/templs.ts
+// src/temples.ts
 
 function isUndefined(value) {
   return value === void 0;
@@ -3601,7 +3601,7 @@ function createTx(meta, fn) {
   });
 }
 var _query, _tx, _exec, _read;
-var Templs = class {
+var Temples = class {
   /**
    * Support the following ways to init the ObeliskClient:
    * 1. mnemonics
@@ -4005,7 +4005,7 @@ var Templs = class {
     return bcs.de(type, u8Value);
   }
 };
-exports.Templs = Templs;
+exports.Temples = Temples;
 _query = new WeakMap();
 _tx = new WeakMap();
 _exec = new WeakMap();
@@ -31150,8 +31150,8 @@ if (!g.fetch) {
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],135:[function(require,module,exports){
-var templs = require('@0xtempl/client');
+var temples = require('@0xtempl/client');
 
-window.templs = templs;
+window.temples = temples;
 
 },{"@0xtempl/client":6}]},{},[135]);

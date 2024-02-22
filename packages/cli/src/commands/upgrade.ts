@@ -22,7 +22,7 @@ const commandModule: CommandModule<Options, Options> = {
       },
       configPath: {
         type: "string",
-        default: "templs.config.ts",
+        default: "temples.config.ts",
         decs: "Path to the config file",
       },
     });

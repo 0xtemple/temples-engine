@@ -1,7 +1,7 @@
 import { defineConfig } from "tsup";
 
 export default defineConfig({
-  entry: ["src/templs.ts"],
+  entry: ["src/temples.ts"],
   target: "esnext",
   format: ["esm"],
   dts: false,

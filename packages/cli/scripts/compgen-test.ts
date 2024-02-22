@@ -108,7 +108,7 @@ async function init() {
 }`;
   let a = formatAndWriteMove(
     output,
-    "/Users/feng/Desktop/templs/templs-engine/packages/cli",
+    "/Users/feng/Desktop/temples/temples-engine/packages/cli",
     "formatAndWriteMove"
   );
   // console.log(output)

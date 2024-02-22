@@ -36,14 +36,14 @@ import { ProgramMetadata } from '@gear-js/api';
 //   type: string;
 // };
 
-export type TemplsParams = {
+export type TemplesParams = {
   mnemonics?: string;
   secretKey?: string;
   fullnodeUrls?: string[];
   faucetUrl?: string;
   networkType?: Network;
   packageId?: string;
-  metadata?: ProgramMetadata;
+  metaHash?: string;
 };
 
 export type SchemaFieldType = {
@@ -86,7 +86,7 @@ export type SchemaContentType = {
 //     params: (TransactionArgument | SerializedBcs<any>)[],
 //     typeArguments?: string[],
 //     isRaw?: boolean
-//   ): Promise<DevInspectResults | TransactionResult>;
+//   ): ContractCallResult<ApiType, ContractCallOutcome>;
 // }
 
 // export interface ContractTx extends MessageMeta {
@@ -95,7 +95,7 @@ export type SchemaContentType = {
 //     params: (TransactionArgument | SerializedBcs<any>)[],
 //     typeArguments?: string[],
 //     isRaw?: boolean
-//   ): Promise<SuiTransactionBlockResponse | TransactionResult>;
+//   ): SubmittableExtrinsic<ApiType>;
 // }
 
 // export type MapMessageTx = Record<string, ContractTx>;

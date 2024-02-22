@@ -11,8 +11,8 @@ import chalk from "chalk";
 dotenv.config();
 
 yargs(hideBin(process.argv))
-  // Explicit name to display in help (by default it's the entry file, which may not be "templs" for e.g. ts-node)
-  .scriptName("templs")
+  // Explicit name to display in help (by default it's the entry file, which may not be "temples" for e.g. ts-node)
+  .scriptName("temples")
   // Use the commands directory to scaffold
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- command array overload isn't typed, see https://github.com/yargs/yargs/blob/main/docs/advanced.md#esm-hierarchy
   .command(commands as any)
@@ -24,7 +24,7 @@ yargs(hideBin(process.argv))
     if (msg.includes("Missing required argument")) {
       console.log(
         chalk.yellow(
-          `Run 'pnpm templs ${process.argv[2]} --help' for a list of available and required arguments.`
+          `Run 'pnpm temples ${process.argv[2]} --help' for a list of available and required arguments.`
         )
       );
     }

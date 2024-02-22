@@ -9,7 +9,7 @@ type Options = {
 const commandModule: CommandModule<Options, Options> = {
   command: "schemagen <configPath>",
 
-  describe: "Autogenerate Templs schemas based on the config file",
+  describe: "Autogenerate Temples schemas based on the config file",
 
   builder(yargs) {
     return yargs.options({

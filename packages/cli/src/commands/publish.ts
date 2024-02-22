@@ -11,7 +11,7 @@ type Options = {
 const commandModule: CommandModule<Options, Options> = {
   command: "publish",
 
-  describe: "Publish templs move contracts",
+  describe: "Publish temples move contracts",
 
   builder(yargs) {
     return yargs.options({
@@ -22,7 +22,7 @@ const commandModule: CommandModule<Options, Options> = {
       },
       configPath: {
         type: "string",
-        default: "templs.config.ts",
+        default: "temples.config.ts",
         decs: "Path to the config file",
       },
     });

@@ -18,13 +18,13 @@ type Options = {
 const commandModule: CommandModule<Options, Options> = {
   command: "faucet",
 
-  describe: "Interact with a Templs faucet",
+  describe: "Interact with a Temples faucet",
 
   builder(yargs) {
     return yargs.options({
       network: {
         type: "string",
-        desc: "URL of the Templs faucet",
+        desc: "URL of the Temples faucet",
         choices: ["testnet", "devnet", "localnet"],
         default: "localnet",
       },

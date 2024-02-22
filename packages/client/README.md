@@ -1,6 +1,6 @@
-# Templs Client SDK
+# Temples Client SDK
 
-Templs is client agnostic: any client -- a browser, a game engine, or an ios/android app -- can implement the synchronization protocol and a client-side cache to replicate Store tables, along with the necessary infrastructure to send transactions to the World.
+Temples is client agnostic: any client -- a browser, a game engine, or an ios/android app -- can implement the synchronization protocol and a client-side cache to replicate Store tables, along with the necessary infrastructure to send transactions to the World.
 
 Currently we only support browsers, Node and the COCOS game engine.
 
@@ -32,10 +32,10 @@ export const obeliskConfig = {
 } as ObeliskConfig;
 ```
 
-Through the CLI, we will generate the corresponding contract based on templs.config.ts At this point we need to write the system logic.
+Through the CLI, we will generate the corresponding contract based on temples.config.ts At this point we need to write the system logic.
 
 ```bash
-templs schemagen templs.config.ts
+temples schemagen temples.config.ts
 ```
 
 The next step is simply to write the system file method.
@@ -57,22 +57,22 @@ Finally we deploy the complete contract to devnet
 
 
 ```bash
-templs publish --network devnet --configPath templs.config.ts
+temples publish --network devnet --configPath temples.config.ts
 ```
 
 We'll get the `packageId` and `worldId` on the command line.
 
-### Init Templs Client
+### Init Temples Client
 
 ```typescript
-import { getMetadata, Templs, NetworkType } from "@0xtempl/client";
+import { getMetadata, Temples, NetworkType } from "@0xtempl/client";
 
 const network = "devnet" as NetworkType
 const packageId = "0x804578b9eed47d461bba52c393cf148302819e2ba0a0f558356cc419b3e941ed"
 
 const metadata = await getMetadata(network, packageId);
 
-const templs = new Templs({
+const temples = new Temples({
     networkType: network,
     packageId: packageId,
     metadata: metadata,
@@ -82,21 +82,21 @@ const templs = new Templs({
 
 ### World Tx
 
-If you need to call a method in the system, you can do so using the `templs.tx.moudleName.funcName()` form.
+If you need to call a method in the system, you can do so using the `temples.tx.moudleName.funcName()` form.
 
 ```typescript
-import { getMetadata, Templs, TransactionBlock } from "@0xtempl/client";
+import { getMetadata, Temples, TransactionBlock } from "@0xtempl/client";
 
 const metadata = await getMetadata(network, packageId);
 
-const templs = new Templs({
+const temples = new Temples({
     networkType: network,
     packageId: packageId,
     metadata: metadata,
     secretKey: privkey
 });
 
-// Initiate transactions through the account set up by templs
+// Initiate transactions through the account set up by temples
 const tx = new TransactionBlock()
 
 const world = tx.pure(WORLD_ID)
@@ -104,7 +104,7 @@ const params = [
     world,
 ]
 
-const res_tx = await templs.tx.counter_system.inc(tx, params)
+const res_tx = await temples.tx.counter_system.inc(tx, params)
 
 // If you want to encapsulate the TransactionBlock
 const tx = new TransactionBlock()
@@ -115,9 +115,9 @@ const params = [
 // By isolating the signature from the transactionBlock construction in this way,
 // the front-end wallet plugin can signAndSend() directly to the transactionBlock,
 // facilitating front-end interaction.
-const new_tx = await templs.tx.counter_system.inc(tx, params, undefined, true) as TransactionBlock;
+const new_tx = await temples.tx.counter_system.inc(tx, params, undefined, true) as TransactionBlock;
 
-const response = await templs.signAndSendTxn(
+const response = await temples.signAndSendTxn(
     new_tx
 )
 ```
@@ -126,11 +126,11 @@ const response = await templs.signAndSendTxn(
 
 #### Query public contract view func
 
-If your system method provides a method with no modification status and a return, then you can query it via `templs.query.moudleName.funcName()`.
+If your system method provides a method with no modification status and a return, then you can query it via `temples.query.moudleName.funcName()`.
 
 ```typescript
 const metadata = await getMetadata(NETWORK, PACKAGE_ID);
-const templs = new Templs({
+const temples = new Temples({
     networkType: NETWORK,
     packageId: PACKAGE_ID,
     metadata: metadata,
@@ -141,7 +141,7 @@ const world = tx.pure(WORLD_ID)
 const params = [
     world,
 ]
-const query_value = await templs.query.counter_system.get(tx, params);
+const query_value = await temples.query.counter_system.get(tx, params);
 ```
 
 #### Get world
@@ -150,12 +150,12 @@ Queries the Object information of worldId.
 
 ```typescript
     const metadata = await getMetadata(NETWORK, PACKAGE_ID);
-    const templs = new Templs({
+    const temples = new Temples({
         networkType: NETWORK,
         packageId: PACKAGE_ID,
         metadata: metadata,
     });
-    const world_value = await templs.getWorld(WORLD_ID)
+    const world_value = await temples.getWorld(WORLD_ID)
 ```
 
 
@@ -165,12 +165,12 @@ List all schema name in the world store.
 
 ```typescript
 const metadata = await getMetadata(NETWORK, PACKAGE_ID);
-const templs = new Templs({
+const temples = new Temples({
     networkType: NETWORK,
     packageId: PACKAGE_ID,
     metadata: metadata,
 });
-const schemaNames = await templs.listSchemaNames(
+const schemaNames = await temples.listSchemaNames(
   '0x1541f3a2e7ac48e3e68e60bb97a7cee94e16316cc3f9043a9c0f5e6790ea3af0'
 );
 ```
@@ -182,7 +182,7 @@ Get the entity's data based on schema name and entity id(option).
 
 ```typescript
 const metadata = await getMetadata(NETWORK, PACKAGE_ID);
-const templs = new Templs({
+const temples = new Temples({
     networkType: NETWORK,
     packageId: PACKAGE_ID,
     metadata: metadata,
@@ -193,7 +193,7 @@ const worldId = "0x1541f3a2e7ac48e3e68e60bb97a7cee94e16316cc3f9043a9c0f5e6790ea3
 // get schema entity data
 const schemaName = "simple_schema"
 const entityId = "0x00000000000000000000000000000000000000000000000000000000000003ed"
-const entities = await templs.getEntity(
+const entities = await temples.getEntity(
     worldId,
     schemaName,
     entityId
@@ -201,7 +201,7 @@ const entities = await templs.getEntity(
 
 // get singleton schema entity data
 const singletonSchemaName = "counter"
-const entities = await templs.getEntity(
+const entities = await temples.getEntity(
     worldId,
     singletonSchemaName
 );
@@ -215,7 +215,7 @@ Determine if the entity exists
 
 ```typescript
 const metadata = await getMetadata(NETWORK, PACKAGE_ID);
-const templs = new Templs({
+const temples = new Temples({
     networkType: NETWORK,
     packageId: PACKAGE_ID,
     metadata: metadata,
@@ -226,7 +226,7 @@ const worldId = "0x1541f3a2e7ac48e3e68e60bb97a7cee94e16316cc3f9043a9c0f5e6790ea3
 // get schema entity data
 const schemaName = "simple_schema"
 const entityId = "0x00000000000000000000000000000000000000000000000000000000000003ed"
-const entities = await templs.containEntity(
+const entities = await temples.containEntity(
     worldId,
     schemaName,
     entityId
@@ -234,7 +234,7 @@ const entities = await templs.containEntity(
 
 // get singleton schema entity data
 const singletonSchemaName = "counter"
-const entities = await templs.containEntity(
+const entities = await temples.containEntity(
     worldId,
     singletonSchemaName
 );
@@ -247,14 +247,14 @@ Query all the objects under the current worldId that are owned by a certain addr
 
 ```typescript
 const metadata = await getMetadata(NETWORK, PACKAGE_ID);
-const templs = new Templs({
+const temples = new Temples({
     networkType: NETWORK,
     packageId: PACKAGE_ID,
     metadata: metadata,
 });
 
 const owner = "0xfa99b5b0463fcfb7d0203c701a76da5eda21a96190eb1368ab36a437cc89195e";
-const owned_objects_value = await templs.getOwnedObjects(owner);
+const owned_objects_value = await temples.getOwnedObjects(owner);
 ```
 
 ### About entity key
@@ -271,14 +271,14 @@ We provide three ways to convert entity keys, and of course you are welcome to c
 //
 // For example: using the objectId of the NFT as the key, 
 // you can set the owner of the nft as the owner of the accessed entity.
-let objectAddress = await templs.entity_key_from_object(
+let objectAddress = await temples.entity_key_from_object(
     '0x1541f3a2e7ac48e3e68e60bb97a7cee94e16316cc3f9043a9c0f5e6790ea3af0'
 );
 
 // hexAddress(keccak256(inputStringData))
-let bytesAddress = await templs.entity_key_from_bytes('hello');
+let bytesAddress = await temples.entity_key_from_bytes('hello');
 
 // hexAddress(inputNumberData)
-let numberAddress = await templs.entity_key_from_u256(123);
+let numberAddress = await temples.entity_key_from_u256(123);
 ```
 

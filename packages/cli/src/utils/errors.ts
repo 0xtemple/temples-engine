@@ -4,7 +4,7 @@ import { fromZodError, ValidationError } from "zod-validation-error";
 
 export class NotInsideProjectError extends Error {
   name = "NotInsideProjectError";
-  message = "You are not inside a Templs project";
+  message = "You are not inside a Temples project";
 }
 
 export class ObeliskCliError extends Error {
@@ -35,7 +35,7 @@ export function logError(error: unknown) {
     // TODO add docs to the website and update the link to the specific page
     console.log(
       chalk.blue(
-        `To learn more about Templs's configuration, please go to https://github.com/0xtempl`
+        `To learn more about Temples's configuration, please go to https://github.com/0xtempl`
       )
     );
   } else if (error instanceof ObeliskCliError) {

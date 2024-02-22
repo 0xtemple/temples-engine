@@ -3,7 +3,7 @@
 // export * from '@mysten/sui.js/transactions';
 // export { Ed25519Keypair } from '@mysten/sui.js/keypairs/ed25519';
 // export { BCS, getSuiMoveConfig } from '@mysten/bcs';
-export { Templs } from './templs';
+export { Temples } from './temples';
 export { VaraAccountManager } from './libs/varaAccountManager';
 // export { SuiContractFactory } from './libs/suiContractFactory';
 // export { loadMetadata } from './metadata';

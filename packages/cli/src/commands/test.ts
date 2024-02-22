@@ -9,7 +9,7 @@ type Options = {
 const commandModule: CommandModule<Options, Options> = {
   command: "test",
 
-  describe: "Run tests in Templs contracts",
+  describe: "Run tests in Temples contracts",
 
   builder(yargs) {
     return yargs.options({

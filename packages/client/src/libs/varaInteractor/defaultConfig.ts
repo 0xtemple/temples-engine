@@ -12,20 +12,24 @@ export const getDefaultURL = (networkType: Network = Network.TESTNET) => {
     case Network.LOCAL:
       return {
         fullNode: 'ws://127.0.0.1:9944',
+        http: 'http://127.0.0.1:9933',
         // faucet: 'http://127.0.0.1:8081',
       };
     case Network.TESTNET:
       return {
         fullNode: 'wss://testnet.vara.network',
+        http: 'https://testnet.vara.network',
         // faucet: 'https://faucet.testnet.aptoslabs.com',
       };
     case Network.MAINNET:
       return {
         fullNode: 'wss://rpc.vara.network',
+        http: 'https://rpc.vara.network',
       };
     default:
       return {
         fullNode: 'wss://testnet.vara.network',
+        http: 'https://testnet.vara.network',
         // faucet: 'https://faucet.devnet.aptoslabs.com',
       };
   }

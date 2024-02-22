@@ -4,15 +4,15 @@
   "description": "Tookit for interacting with vara eps framework",
   "keywords": [
     "vara",
-    "templs labs",
+    "temples labs",
     "blockchain"
   ],
-  "author": "team@templs.build",
-  "homepage": "https://github.com/0xtempl/templs-engine/tree/main/packages/client#readme",
-  "bugs": "https://github.com/0xtempl/templs-engine/issues",
+  "author": "team@temples.build",
+  "homepage": "https://github.com/0xtempl/temples-engine/tree/main/packages/client#readme",
+  "bugs": "https://github.com/0xtempl/temples-engine/issues",
   "repository": {
     "type": "git",
-    "url": "https://github.com/0xtempl/templs-engine.git"
+    "url": "https://github.com/0xtempl/temples-engine.git"
   },
   "license": "Apache-2.0",
   "publishConfig": {
@@ -58,6 +58,7 @@
     "@noble/curves": "^1.2.0",
     "@noble/hashes": "^1.3.2",
     "@polkadot/api": "^10.11.2",
+    "@polkadot/api-contract": "^10.11.2",
     "@polkadot/keyring": "^12.3.1",
     "@polkadot/types": "^10.11.2",
     "@polkadot/util": "^12.6.2",
