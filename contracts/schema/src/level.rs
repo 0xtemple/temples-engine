@@ -1,83 +1,50 @@
+use gstd::ActorId;
 use gstd::collections::HashMap;
 use gstd::prelude::*;
+use crate::storage::{SchemaType, TEMPLE_STORAGE};
 
-#[derive(Debug, Clone, Default, Encode, Decode, PartialEq)]
-#[codec(crate = gstd::codec)]
-pub struct Level {
-    pub value: u128,
+pub fn get_schema_id() -> ActorId {
+    crate::storage::get_schema_id(SchemaType::Onchain, String::from("Level"))
 }
 
-#[derive(Debug, Default)]
-pub struct LevelSchema {
-    // keys: Vec<String>,
-    // types: Vec<String>,
-    entity_to_value: HashMap<u128, Level>,
+pub fn get_keys() -> Vec<String> {
+    vec![String::from("u128")]
 }
 
-impl LevelSchema {
-    pub fn get_schema(&self) -> (Vec<String>, Vec<String>) {
-        (vec![String::from("value")], vec![String::from("u128")])
-        // (LEVEL::get_field_names(), LEVEL::get_field_types())
-    }
-
-    pub fn get(&self, entity: u128) -> u128 {
-        let binding = Level::default();
-        let value = self.entity_to_value.get(&entity).unwrap_or(&binding);
-        value.value
-    }
-
-    pub fn set(&mut self, entity: u128, value: u128) {
-        self.entity_to_value.insert(entity, Level { value });
-    }
-
-    pub fn remove(&mut self, entity: u128) {
-        self.entity_to_value.remove(&entity);
-    }
-
-    pub fn has(&self, entity: u128) -> bool {
-        self.entity_to_value.contains_key(&entity)
-    }
-
-    pub fn get_entities(&self) -> Vec<u128> {
-        self.entity_to_value.keys().cloned().collect()
-    }
-
-    pub fn get_entities_with_value(&self, value: Level) -> Vec<u128> {
-        let mut entities_with_value = Vec::new();
-
-        for (entity, stored_value) in &self.entity_to_value {
-            if stored_value == &value {
-                entities_with_value.push(*entity);
-            }
-        }
-        entities_with_value
-    }
+pub fn get_key_names() -> Vec<String> {
+    vec![String::from("key")]
 }
 
-pub static mut LEVEL: Option<LevelSchema> = None;
+pub fn get_values() -> Vec<String> {
+    vec![String::from("u128")]
+}
 
-#[test]
-fn mint() {
-    // let LEVEL  = LEVEL { value: 1000 };
-    // // assert_eq!(vec![1,2], LEVEL.encode());
-    //
-    // let mut c: &[u8] = &vec![232u8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0][..];
-    // let c2: LEVEL = LEVEL::decode(&mut c).unwrap();
-    // assert_eq!(c2, LEVEL);
+pub fn get_value_names() -> Vec<String> {
+    vec![String::from("value")]
+}
 
-    let c = unsafe { LEVEL.get_or_insert(Default::default()) };
-    let schema = (vec![String::from("value")], vec![String::from("u128")]);
-    assert_eq!(schema, c.get_schema());
+pub fn register() -> (ActorId, Vec<u8>) {
+    let temple_schema = unsafe { TEMPLE_STORAGE.get_or_insert(Default::default()) };
+    temple_schema.set_schema_metadata(
+        get_schema_id(),
+        get_keys(),
+        get_key_names(),
+        get_values(),
+        get_value_names(),
+    )
+}
 
-    assert_eq!(c.get(0), 0);
-    assert_eq!(c.has(0), false);
-    c.set(0, 1000);
-    assert_eq!(c.get(0), 1000);
-    assert_eq!(c.has(0), true);
+pub fn get(key: u128) -> u128 {
+    let temple_schema = unsafe { TEMPLE_STORAGE.get_or_insert(Default::default()) };
+    let temple_key_tuple = (key).encode();
+    let temple_raw_value = temple_schema.get(get_schema_id(), temple_key_tuple);
+    let (value): (u128) = Decode::decode(&mut &temple_raw_value[..]).unwrap_or(Default::default());
+    value
+}
 
-    assert_eq!(c.get_entities(), vec![0]);
-    c.set(1, 1000);
-    // assert_eq!(c.get_entities(), vec![0, 1]);
-
-    // assert_eq!(c.get_entities_with_value(LEVEL { value: 1000 }), vec![1,0]);
+pub fn set(key: u128, value: u128) {
+    let temple_schema = unsafe { TEMPLE_STORAGE.get_or_insert(Default::default()) };
+    let temple_key_tuple = (key).encode();
+    let temple_raw_value = (value).encode();
+    temple_schema.set(get_schema_id(), temple_key_tuple, temple_raw_value);
 }

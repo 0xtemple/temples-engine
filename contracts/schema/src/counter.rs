@@ -1,35 +1,56 @@
 use gstd::{msg, prelude::*};
+use gstd::ActorId;
+use crate::storage::{ SchemaType, TEMPLE_STORAGE};
 
-#[derive(Debug, Clone, Default, Encode, Decode, PartialEq)]
+#[derive(Debug, Default,  Encode, Decode, TypeInfo)]
 #[codec(crate = gstd::codec)]
+#[scale_info(crate = gstd::scale_info)]
 pub struct Counter {
     pub value: u128,
 }
 
-impl Counter {
-    pub fn get_schema(&self) -> (Vec<String>, Vec<String>) {
-        (vec![String::from("value")], vec![String::from("u128")])
-    }
-
-    pub fn get(&self) -> u128 {
-        self.value
-    }
-
-    pub fn set(&mut self, value: u128) {
-        self.value = value;
-        msg::reply(value, 0).expect("Failed to encode or reply with `NftEvent`.");
-    }
+pub fn get_schema_id() -> ActorId {
+  crate::storage::get_schema_id(SchemaType::Onchain, String::from("Counter"))
 }
 
-pub static mut COUNTER: Option<Counter> = None;
+pub fn get_keys() -> Vec<String> {
+    vec![String::from("")]
+}
 
-#[test]
-fn mint() {
-    let c = unsafe { COUNTER.get_or_insert(Default::default()) };
-    let schema = (vec![String::from("value")], vec![String::from("u128")]);
-    assert_eq!(schema, c.get_schema());
+pub fn get_key_names() -> Vec<String> {
+    vec![String::from("")]
+}
 
-    assert_eq!(c.get(), Some(Counter { value: 0 }));
-    c.set(Counter { value: 1000 });
-    assert_eq!(c.get(), Some(Counter { value: 1000 }));
+pub fn get_values() -> Vec<String> {
+    vec![String::from("u128")]
+}
+
+pub fn get_value_names() -> Vec<String> {
+    vec![String::from("value")]
+}
+
+pub fn register() -> (ActorId,Vec<u8>) {
+    let temple_schema = unsafe { TEMPLE_STORAGE.get_or_insert(Default::default()) };
+    temple_schema.set_schema_metadata(
+        get_schema_id(),
+        get_keys(),
+        get_key_names(),
+        get_values(),
+        get_value_names(),
+    )
+}
+
+pub fn get() -> u128 {
+    let temple_schema = unsafe { TEMPLE_STORAGE.get_or_insert(Default::default()) };
+    let temple_key_tuple = vec![];
+    let temple_raw_value = temple_schema.get(get_schema_id(), temple_key_tuple);
+    let (value): (u128) = Decode::decode(&mut &temple_raw_value[..]).unwrap_or(Default::default());
+    value
+}
+
+pub fn set(value: u128) {
+    let temple_schema = unsafe { TEMPLE_STORAGE.get_or_insert(Default::default()) };
+    let temple_key_tuple = vec![];
+    let temple_raw_value = (value).encode();
+    temple_schema.set(get_schema_id(), temple_key_tuple, temple_raw_value);
 }
