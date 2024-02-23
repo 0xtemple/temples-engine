@@ -201,7 +201,6 @@ export class Temples {
     const payload = {
       [meta.funcName]: params,
     };
-    console.log(payload);
     const account = await this.accountManager.getKeyPair();
     const tx = await this.varaInteractor.structuredTransaction(
       account,
@@ -210,10 +209,8 @@ export class Temples {
       this.metadata!
     );
     if (isRaw === true) {
-      console.log('---- not sign and send');
       return tx;
     }
-    console.log('end');
     return await this.varaInteractor.signAndSend(account, tx);
   };
 
