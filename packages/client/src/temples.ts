@@ -111,74 +111,68 @@ export class Temples {
       this.metadata = metadata;
       const metaraw = ProgramMetadata.from(metadata);
       const allTypes = metaraw.getAllTypes();
-      const execMethodTypes = allTypes['EngineSystemsSystemAction'];
-      // for (const [key, value] of Object.entries(queryMethodTypes)) {
-      const execEnumObj = JSON.parse(execMethodTypes as string)._enum;
-      console.log(execEnumObj);
-      for (const [funcName, enumValue] of Object.entries(execEnumObj)) {
-        const meta = {
-          funcName,
-          paramType: enumValue,
-        } as VaraFuncType;
-        if (isUndefined(this.#tx['contract'])) {
-          this.#tx['contract'] = {};
-        }
-        if (isUndefined(this.#tx['contract'][funcName])) {
-          this.#tx['contract'][funcName] = createTx(meta, (p, isRaw) =>
-            this.#exec(meta, p, isRaw)
-          );
-        }
-      }
+      try {
+        const stateInRegex = /SystemsStateIn$/;
+        const systemActionRegex = /SystemsSystemAction$/;
+        for (const [key, value] of Object.entries(allTypes)) {
+          let execEnumObj = null;
+          if (systemActionRegex.test(key)) {
+            if (value !== 'Null') {
+              execEnumObj = JSON.parse(value as string)._enum;
+            }
+          }
 
-      const queryMethodTypes = allTypes['EngineSystemsStateIn'];
-      const queryEnumObj = JSON.parse(queryMethodTypes as string)._enum;
+          let queryEnumObj = null;
+          if (stateInRegex.test(key)) {
+            if (value !== 'Null') {
+              queryEnumObj = JSON.parse(value as string)._enum;
+            }
+          }
 
-      for (const [funcName, enumValue] of Object.entries(queryEnumObj)) {
-        const meta = {
-          funcName,
-          paramType: enumValue,
-        } as VaraFuncType;
-        if (isUndefined(this.#query['contract'])) {
-          this.#query['contract'] = {};
+          // const execMethodTypes = allTypes['EngineSystemsSystemAction'];
+          // for (const [key, value] of Object.entries(queryMethodTypes)) {
+          // const execEnumObj = JSON.parse(execMethodTypes as string)._enum;
+
+          // const queryMethodTypes = allTypes['EngineSystemsStateIn'];
+          // const queryEnumObj = JSON.parse(queryMethodTypes as string)._enum;
+          // console.log(execEnumObj);
+          // console.log(queryEnumObj);
+          if (execEnumObj !== null) {
+            for (const [funcName, enumValue] of Object.entries(execEnumObj)) {
+              const meta = {
+                funcName,
+                paramType: enumValue,
+              } as VaraFuncType;
+              if (isUndefined(this.#tx['contract'])) {
+                this.#tx['contract'] = {};
+              }
+              if (isUndefined(this.#tx['contract'][funcName])) {
+                console.log('exec func: ', funcName);
+                this.#tx['contract'][funcName] = createTx(meta, (p, isRaw) =>
+                  this.#exec(meta, p, isRaw)
+                );
+              }
+            }
+          }
+          if (queryEnumObj !== null) {
+            for (const [funcName, enumValue] of Object.entries(queryEnumObj)) {
+              const meta = {
+                funcName,
+                paramType: enumValue,
+              } as VaraFuncType;
+              if (isUndefined(this.#query['contract'])) {
+                this.#query['contract'] = {};
+              }
+              if (isUndefined(this.#query['contract'][funcName])) {
+                console.log('query func: ', funcName);
+                this.#query['contract'][funcName] = createQuery(meta, (p) =>
+                  this.#read(meta, p)
+                );
+              }
+            }
+          }
         }
-        if (isUndefined(this.#query['contract'][funcName])) {
-          this.#query['contract'][funcName] = createQuery(meta, (p) =>
-            this.#read(meta, p)
-          );
-        }
-      }
-      // }
-      // Object.values(metadata as SuiMoveNormalizedModules).forEach((value) => {
-      //   const data = value as SuiMoveMoudleValueType;
-      //   const moduleName = data.name;
-      //   Object.entries(data.exposedFunctions).forEach(([funcName, value]) => {
-      //     const meta = value as SuiMoveMoudleFuncType;
-      //     meta.moduleName = moduleName;
-      //     meta.funcName = funcName;
-
-      //     if (isUndefined(this.#query[moduleName])) {
-      //       this.#query[moduleName] = {};
-      //     }
-      //     if (isUndefined(this.#query[moduleName][funcName])) {
-      //       this.#query[moduleName][funcName] = createQuery(
-      //         meta,
-      //         (tx, p, typeArguments, isRaw) =>
-      //           this.#read(meta, tx, p, typeArguments, isRaw)
-      //       );
-      //     }
-
-      //     if (isUndefined(this.#tx[moduleName])) {
-      //       this.#tx[moduleName] = {};
-      //     }
-      //     if (isUndefined(this.#tx[moduleName][funcName])) {
-      //       this.#tx[moduleName][funcName] = createTx(
-      //         meta,
-      //         (tx, p, typeArguments, isRaw) =>
-      //           this.#exec(meta, tx, p, typeArguments, isRaw)
-      //       );
-      //     }
-      //   });
-      // });
+      } catch {}
     }
   }
 
@@ -269,6 +263,15 @@ export class Temples {
 
   getMetadata() {
     return this.metadata;
+  }
+
+  getAllTypes(metadata?: string) {
+    if (metadata === undefined) {
+      metadata = this.metadata!;
+    }
+    const metaraw = ProgramMetadata.from(metadata);
+    const allTypes = metaraw.getAllTypes();
+    return allTypes;
   }
 
   async getBalance(account?: String) {
