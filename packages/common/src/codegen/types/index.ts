@@ -38,7 +38,7 @@ export interface ValueType {
 
 export type SchemaMapType = BaseType | ValueType;
 
-export type ObeliskConfig = {
+export type TempleConfig = {
   name: string;
   schemas: Record<string, SchemaMapType>;
 };
@@ -60,13 +60,13 @@ export type MoveType =
   | "vector<u64>"
   | "vector<u128>";
 
-export type SchemaInfo =  {
-  structName: string,
-  keyTypes: string[],
-  keyNames: string[],
-  valueTypes: string[],
-  valueNames: string[],
-}
+export type SchemaInfo = {
+  structName: string;
+  keyTypes: string[];
+  keyNames: string[];
+  valueTypes: string[];
+  valueNames: string[];
+};
 
 export interface RenderSchemaOptions {
   projectName: string;
@@ -75,5 +75,5 @@ export interface RenderSchemaOptions {
   singleton: boolean;
   keyType: BaseType | Record<string, BaseType>; // move type
   valueType: BaseType | Record<string, BaseType>; // move type
-  schemaInfo: SchemaInfo
+  schemaInfo: SchemaInfo;
 }

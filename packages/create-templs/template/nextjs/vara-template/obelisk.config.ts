@@ -1,4 +1,4 @@
-import { ObeliskConfig } from '@0xtempl/common';
+import { TempleConfig } from '@0xtempl/common';
 
 export const obeliskConfig = {
   name: 'counter',
@@ -10,4 +10,4 @@ export const obeliskConfig = {
       defaultValue: 0,
     },
   },
-} as ObeliskConfig;
+} as TempleConfig;

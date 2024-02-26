@@ -1,11 +1,12 @@
 import {
-  ObeliskConfig,
+  TempleConfig,
   BaseValueType,
   BaseType,
   RenderSchemaOptions,
-  MoveType, SchemaInfo,
+  MoveType,
+  SchemaInfo,
 } from "../../types";
-import {formatAndWriteRust, writeToml} from "../formatAndWrite";
+import { formatAndWriteRust, writeToml } from "../formatAndWrite";
 import {
   getFriendSystem,
   renderKeyName,
@@ -27,33 +28,39 @@ import {
   renderSingleGetAllFunc,
   renderSingleGetAttrsFunc,
 } from "./common";
-import {generateSrc} from "./generateSrc";
+import { generateSrc } from "./generateSrc";
 
-export function getRenderSchemaOptions(config: ObeliskConfig) {
+export function getRenderSchemaOptions(config: TempleConfig) {
   const options: RenderSchemaOptions[] = [];
   for (const schemaName of Object.keys(config.schemas)) {
     const schemaData = config.schemas[schemaName];
     let keyType: BaseType | Record<string, BaseType>;
     let valueType: BaseType | Record<string, BaseType>;
     let singleton = false;
-    let ephemeral = schemaData.ephemeral !== undefined ? schemaData.ephemeral : false;;
+    let ephemeral =
+      schemaData.ephemeral !== undefined ? schemaData.ephemeral : false;
 
     if (typeof schemaData === "string") {
-        valueType = schemaData;
-        keyType = {}
+      valueType = schemaData;
+      keyType = {};
     } else {
       valueType = schemaData.valueType;
       keyType = schemaData.keyType;
 
-      singleton = typeof schemaData.valueType !== 'object' || schemaData.valueType === null || Object.keys(schemaData.valueType).length === 0 ? true : false;
+      singleton =
+        typeof schemaData.valueType !== "object" ||
+        schemaData.valueType === null ||
+        Object.keys(schemaData.valueType).length === 0
+          ? true
+          : false;
     }
 
-    let schemaInfo: SchemaInfo =  {
+    let schemaInfo: SchemaInfo = {
       structName: convertToCamelCase(schemaName),
       keyTypes: getTypes(keyType),
       keyNames: getNames(keyType),
       valueTypes: getTypes(valueType),
-      valueNames: getNames(valueType)
+      valueNames: getNames(valueType),
     };
 
     options.push({
@@ -63,29 +70,29 @@ export function getRenderSchemaOptions(config: ObeliskConfig) {
       valueType,
       keyType,
       ephemeral,
-      schemaInfo
+      schemaInfo,
     });
   }
   return options;
 }
 
 function getTypes(input: string | Record<string, any>): string[] {
-  if (typeof input === 'string') {
+  if (typeof input === "string") {
     return [input];
-  } else if (typeof input === 'object' && input !== null) {
+  } else if (typeof input === "object" && input !== null) {
     return Object.values(input);
   } else {
-    throw new Error('Invalid input type');
+    throw new Error("Invalid input type");
   }
 }
 
 function getNames(input: string | Record<string, any>): string[] {
-  if (typeof input === 'string') {
+  if (typeof input === "string") {
     return ["value"];
-  } else if (typeof input === 'object' && input !== null) {
+  } else if (typeof input === "object" && input !== null) {
     return Object.keys(input);
   } else {
-    throw new Error('Invalid input type');
+    throw new Error("Invalid input type");
   }
 }
 
@@ -93,32 +100,35 @@ function generateTuple(types: string[]): string {
   if (types.length === 1) {
     return types[0];
   } else {
-    return `(${types.join(', ')})`;
+    return `(${types.join(", ")})`;
   }
 }
 
-export function generateSchema(config: ObeliskConfig, path: string) {
+export function generateSchema(config: TempleConfig, path: string) {
   const options = getRenderSchemaOptions(config);
   for (const option of options) {
-    let code =  renderSchema(option)
+    let code = renderSchema(option);
     formatAndWriteRust(
       code,
       `${path}/contracts/schemas/src/${option.schemaName}.rs`,
       "formatAndWriteRust"
     );
   }
-  generateLib(config, path)
-  generateStorage(config.name, path)
-  generateSchemaToml(config.name, path)
+  generateLib(config, path);
+  generateStorage(config.name, path);
+  generateSchemaToml(config.name, path);
 
-  generateSrc(config, path)
-
+  generateSrc(config, path);
 }
 
 function renderSchema(option: RenderSchemaOptions) {
-  console.log(option.schemaInfo.keyNames)
-  console.log(generateTuple(option.schemaInfo.keyNames).length)
-  console.log(option.schemaInfo.keyNames.length === 0 ? `vec![]` : generateTuple(option.schemaInfo.keyNames) + `.encode()`)
+  console.log(option.schemaInfo.keyNames);
+  console.log(generateTuple(option.schemaInfo.keyNames).length);
+  console.log(
+    option.schemaInfo.keyNames.length === 0
+      ? `vec![]`
+      : generateTuple(option.schemaInfo.keyNames) + `.encode()`
+  );
   return `
 use gstd::ActorId;
 use gstd::collections::HashMap;
@@ -126,23 +136,29 @@ use gstd::prelude::*;
 use crate::storage::{SchemaType, TEMPLE_STORAGE};
 
 pub fn get_schema_id() -> ActorId {
-    crate::storage::get_schema_id(SchemaType::${option.ephemeral ? 'Offchain' : 'Onchain'}, String::from("${option.schemaInfo.structName}"))
+    crate::storage::get_schema_id(SchemaType::${
+      option.ephemeral ? "Offchain" : "Onchain"
+    }, String::from("${option.schemaInfo.structName}"))
 }
 
 pub fn get_key_types() -> Vec<String> {
-    vec![${option.schemaInfo.keyTypes.map(type => `String::from("${type}")`)}]
+    vec![${option.schemaInfo.keyTypes.map((type) => `String::from("${type}")`)}]
 }
 
 pub fn get_key_names() -> Vec<String> {
-    vec![${option.schemaInfo.keyNames.map(name => `String::from("${name}")`)}]
+    vec![${option.schemaInfo.keyNames.map((name) => `String::from("${name}")`)}]
 }
 
 pub fn get_value_types() -> Vec<String> {
-     vec![${option.schemaInfo.valueTypes.map(type => `String::from("${type}")`)}]
+     vec![${option.schemaInfo.valueTypes.map(
+       (type) => `String::from("${type}")`
+     )}]
 }
 
 pub fn get_value_names() -> Vec<String> {
-    vec![${option.schemaInfo.valueNames.map(name => `String::from("${name}")`)}]
+    vec![${option.schemaInfo.valueNames.map(
+      (name) => `String::from("${name}")`
+    )}]
 }
 
 pub fn register() -> (ActorId, Vec<u8>) {
@@ -156,34 +172,53 @@ pub fn register() -> (ActorId, Vec<u8>) {
     )
 }
 
-pub fn get(${option.schemaInfo.keyNames.map((key, index) => `${key}: ${option.schemaInfo.keyTypes[index]}`)}) -> ${generateTuple(option.schemaInfo.valueTypes)} {
+pub fn get(${option.schemaInfo.keyNames.map(
+    (key, index) => `${key}: ${option.schemaInfo.keyTypes[index]}`
+  )}) -> ${generateTuple(option.schemaInfo.valueTypes)} {
     let temple_schema = unsafe { TEMPLE_STORAGE.get_or_insert(Default::default()) };
-    let temple_key_tuple = ${option.schemaInfo.keyNames.length === 0 ? `vec![]` : generateTuple(option.schemaInfo.keyNames) + `.encode()`};
+    let temple_key_tuple = ${
+      option.schemaInfo.keyNames.length === 0
+        ? `vec![]`
+        : generateTuple(option.schemaInfo.keyNames) + `.encode()`
+    };
     let temple_raw_value = temple_schema.get(get_schema_id(), temple_key_tuple);
     Decode::decode(&mut &temple_raw_value[..]).unwrap_or(Default::default())
 }
 
-pub fn set(${(option.schemaInfo.keyNames.map((key, index) => `${key}: ${option.schemaInfo.keyTypes[index]}`)).concat(option.schemaInfo.valueNames.map((key, index) => `${key}: ${option.schemaInfo.valueTypes[index]}`))}) {
+pub fn set(${option.schemaInfo.keyNames
+    .map((key, index) => `${key}: ${option.schemaInfo.keyTypes[index]}`)
+    .concat(
+      option.schemaInfo.valueNames.map(
+        (key, index) => `${key}: ${option.schemaInfo.valueTypes[index]}`
+      )
+    )}) {
     let temple_schema = unsafe { TEMPLE_STORAGE.get_or_insert(Default::default()) };
-    let temple_key_tuple = ${option.schemaInfo.keyNames.length === 0 ? `vec![]` : generateTuple(option.schemaInfo.keyNames) + `.encode()`};
-    let temple_raw_value = ${generateTuple(option.schemaInfo.valueNames)}.encode();
+    let temple_key_tuple = ${
+      option.schemaInfo.keyNames.length === 0
+        ? `vec![]`
+        : generateTuple(option.schemaInfo.keyNames) + `.encode()`
+    };
+    let temple_raw_value = ${generateTuple(
+      option.schemaInfo.valueNames
+    )}.encode();
     temple_schema.set(get_schema_id(), temple_key_tuple, temple_raw_value);
 }
 `;
 }
 
-
-export function generateLib(config: ObeliskConfig, path: string) {
+export function generateLib(config: TempleConfig, path: string) {
   let code = `
 #![no_std]
 
 pub mod storage;
-${(Object.keys(config.schemas).map(schema => `pub mod ${schema};`).join("\n"))}
+${Object.keys(config.schemas)
+  .map((schema) => `pub mod ${schema};`)
+  .join("\n")}
 `;
   formatAndWriteRust(
-      code,
-      `${path}/contracts/schemas/src/lib.rs`,
-      "formatAndWriteRust"
+    code,
+    `${path}/contracts/schemas/src/lib.rs`,
+    "formatAndWriteRust"
   );
 }
 
@@ -293,15 +328,14 @@ impl Schema {
 pub static mut TEMPLE_STORAGE: Option<Schema> = None;
 `;
   formatAndWriteRust(
-      code,
-      `${path}/contracts/schemas/src/storage.rs`,
-      "formatAndWriteRust"
+    code,
+    `${path}/contracts/schemas/src/storage.rs`,
+    "formatAndWriteRust"
   );
 }
 
 export function generateSchemaToml(name: string, path: string) {
-  let code =
-      `[package]
+  let code = `[package]
 name = "${name}-schemas"
 version = "0.1.0"
 edition = "2021"
@@ -315,9 +349,5 @@ sp-core-hashing = { version = "10", default-features = false }
 parity-scale-codec = { version = "3", default-features = false }
 scale-info = { version = "2", default-features = false }
 `;
-  writeToml(
-      code,
-      `${path}/contracts/schemas/Cargo.toml`,
-      "writeToml"
-  );
+  writeToml(code, `${path}/contracts/schemas/Cargo.toml`, "writeToml");
 }

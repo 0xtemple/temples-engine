@@ -1,7 +1,7 @@
 import type { CommandModule } from "yargs";
 import { logError } from "../utils/errors";
 import { uploadHandler } from "../utils";
-import { loadConfig, ObeliskConfig } from "@0xtempl/common";
+import { loadConfig, TempleConfig } from "@0xtempl/common";
 
 type Options = {
   network: any;
@@ -30,7 +30,7 @@ const commandModule: CommandModule<Options, Options> = {
 
   async handler({ network, configPath }) {
     try {
-      const obeliskConfig = (await loadConfig(configPath)) as ObeliskConfig;
+      const obeliskConfig = (await loadConfig(configPath)) as TempleConfig;
       await uploadHandler(obeliskConfig.name, network);
     } catch (error: any) {
       logError(error);

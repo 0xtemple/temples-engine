@@ -1,5 +1,5 @@
 import type { CommandModule } from "yargs";
-import { worldgen, loadConfig, ObeliskConfig } from "@0xtempl/common";
+import { worldgen, loadConfig, TempleConfig } from "@0xtempl/common";
 import chalk from "chalk";
 
 type Options = {
@@ -19,7 +19,7 @@ const commandModule: CommandModule<Options, Options> = {
 
   async handler({ configPath }) {
     try {
-      const obeliskConfig = (await loadConfig(configPath)) as ObeliskConfig;
+      const obeliskConfig = (await loadConfig(configPath)) as TempleConfig;
       worldgen(obeliskConfig);
       process.exit(0);
     } catch (error: any) {

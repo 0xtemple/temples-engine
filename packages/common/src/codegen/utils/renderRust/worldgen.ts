@@ -1,18 +1,18 @@
-import { SchemaMapType, ObeliskConfig } from "../../types";
+import { SchemaMapType, TempleConfig } from "../../types";
 import { rmdirSync, existsSync } from "fs";
 import { deleteFolderRecursive } from "./common";
-import {generateSystem, generateSystems} from "./generateSystem";
-import {generateMetaDataToml, generateSchemaToml} from "./generateToml";
+import { generateSystem, generateSystems } from "./generateSystem";
+import { generateMetaDataToml, generateSchemaToml } from "./generateToml";
 import { generateEntityKey } from "./generateEntityKey";
 import { generateInit } from "./generateInit";
 import { generateEps } from "./generateEps";
-import {generateSchema, generateSchemas} from "./generateSchema";
-import {generateScript} from "./generateScript";
-import {generateMetadata} from "./generateMetadata";
-import {generateSrc} from "./generateSrc";
-import {generateOther} from "./generateOther";
+import { generateSchema, generateSchemas } from "./generateSchema";
+import { generateScript } from "./generateScript";
+import { generateMetadata } from "./generateMetadata";
+import { generateSrc } from "./generateSrc";
+import { generateOther } from "./generateOther";
 
-export function worldgen(config: ObeliskConfig, srcPrefix?: string) {
+export function worldgen(config: TempleConfig, srcPrefix?: string) {
   let path = "";
   if (srcPrefix === undefined) {
     path = process.cwd();
@@ -20,17 +20,16 @@ export function worldgen(config: ObeliskConfig, srcPrefix?: string) {
     path = srcPrefix;
   }
 
-  console.log(config)
-  console.log(path)
+  console.log(config);
+  console.log(path);
 
-  generateMetadata(config.name, path)
+  generateMetadata(config.name, path);
 
-  generateSchema(config, path)
+  generateSchema(config, path);
 
   generateSystems(config.name, path);
 
   generateOther(config.name, path);
-
 
   // if (existsSync(`${path}/contracts/${config.name}`)) {
   //   deleteFolderRecursive(`${path}/contracts/${config.name}/sources/codegen`);

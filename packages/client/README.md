@@ -16,7 +16,7 @@ We create a Project called Counter and declare sigleton schema called counter, w
 
 
 ```typescript
-import { ObeliskConfig } from '@0xtempl/common';
+import { TempleConfig } from '@0xtempl/common';
 
 export const obeliskConfig = {
   name: 'counter',
@@ -29,7 +29,7 @@ export const obeliskConfig = {
     },
   },
   sample_schema: 'u64',
-} as ObeliskConfig;
+} as TempleConfig;
 ```
 
 Through the CLI, we will generate the corresponding contract based on temples.config.ts At this point we need to write the system logic.

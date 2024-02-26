@@ -33,7 +33,7 @@ export async function loadConfig(configPath?: string): Promise<unknown> {
     // Node.js caches dynamic imports, so without appending a cache breaking
     // param like `?update={Date.now()}` this import always returns the same config
     // if called multiple times in a single process, like the `dev-contracts` cli
-    return (await import(configPath + `?update=${Date.now()}`)).obeliskConfig;
+    return (await import(configPath + `?update=${Date.now()}`)).templeConfig;
   } finally {
     rmSync(TEMP_CONFIG, { force: true });
   }

@@ -1,9 +1,9 @@
-import { ObeliskConfig } from "../../types";
-import {formatAndWriteRust, writeToml} from "../formatAndWrite";
+import { TempleConfig } from "../../types";
+import { formatAndWriteRust, writeToml } from "../formatAndWrite";
 import { existsSync } from "fs";
 
 export function generateLib(name: string, path: string) {
-    let code = `
+  let code = `
 #![no_std]
 
 use ${name}_systems::SystemAction;
@@ -21,16 +21,15 @@ impl Metadata for WorldMetadata {
     type State = ();
 }
 `;
-    formatAndWriteRust(
-      code,
-      `${path}/contracts/metadata/src/lib.rs`,
-      "formatAndWriteRust"
-    );
+  formatAndWriteRust(
+    code,
+    `${path}/contracts/metadata/src/lib.rs`,
+    "formatAndWriteRust"
+  );
 }
 
 export function generateMetaDataToml(name: string, path: string) {
-    let code =
-        `
+  let code = `
 [package]
 name = "${name}-metadata"
 version = "0.1.0"
@@ -44,14 +43,10 @@ ${name}-schemas = { path = "../schemas" }
 gstd = { git = "https://github.com/gear-tech/gear.git", tag = "v1.1.1", features = ["debug"] }
 gmeta = { git = "https://github.com/gear-tech/gear", tag = "v1.1.1" }
 `;
-    writeToml(
-        code,
-        `${path}/contracts/metadata/Cargo.toml`,
-        "writeToml"
-    );
+  writeToml(code, `${path}/contracts/metadata/Cargo.toml`, "writeToml");
 }
 
 export function generateMetadata(name: string, path: string) {
-    generateLib(name, path)
-    generateMetaDataToml(name, path)
+  generateLib(name, path);
+  generateMetaDataToml(name, path);
 }

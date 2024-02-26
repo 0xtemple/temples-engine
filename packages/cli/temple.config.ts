@@ -1,6 +1,6 @@
-import { ObeliskConfig } from "@0xtempl/common";
+import { TempleConfig } from "@0xtempl/common";
 
-export const obeliskConfig = {
+export const templeConfig = {
   name: "examples",
   schemas: {
     test1: {
@@ -12,7 +12,7 @@ export const obeliskConfig = {
     },
     test2: {
       keyType: {
-        key: "u128"
+        key: "u128",
       },
       valueType: {
         state: "Vec<u8>",
@@ -34,4 +34,4 @@ export const obeliskConfig = {
     //   defaultValue: 1000,
     // },
   },
-} as ObeliskConfig;
+} as TempleConfig;

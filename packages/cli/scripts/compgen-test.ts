@@ -5,7 +5,7 @@ type SchemaValueType = string;
 
 type ConfigDataType = Record<string, string>;
 
-type ObeliskConfig = {
+type TempleConfig = {
   name: string;
   systems: string[];
   schemas: Record<string, SchemaMapType | SchemaValueType>;
@@ -61,7 +61,7 @@ async function init() {
       // Key - Single value
       suifren: "bool",
     },
-  } as ObeliskConfig;
+  } as TempleConfig;
 
   let output = `module eps::entity {
     use sui::bag::Bag;

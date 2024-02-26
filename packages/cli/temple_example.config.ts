@@ -1,6 +1,6 @@
-import { ObeliskConfig } from "@0xtempl/common";
+import { TempleConfig } from "@0xtemple/common";
 
-export const obeliskConfig = {
+export const templeConfig = {
   name: "examples",
   description: "examples",
   systems: ["example_system"],
@@ -31,4 +31,4 @@ export const obeliskConfig = {
       },
     },
   },
-} as ObeliskConfig;
+} as TempleConfig;
