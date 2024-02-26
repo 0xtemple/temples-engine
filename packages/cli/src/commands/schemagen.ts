@@ -1,5 +1,5 @@
 import type { CommandModule } from "yargs";
-import { worldgen, loadConfig, TempleConfig } from "@0xtempl/common";
+import { worldgen, loadConfig, TempleConfig } from "@0xtemple/common";
 import chalk from "chalk";
 
 type Options = {

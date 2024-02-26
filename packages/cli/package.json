@@ -1,5 +1,5 @@
 {
-  "name": "@0xtempl/cli",
+  "name": "@0xtemple/cli",
   "version": "0.5.6",
   "description": "Tookit for interacting with vara eps framework",
   "keywords": [
@@ -39,7 +39,7 @@
     "lint": "eslint . --ext .ts"
   },
   "dependencies": {
-    "@0xtempl/common": "workspace:../common",
+    "@0xtemple/common": "workspace:../common",
     "chalk": "^5.0.1",
     "child_process": "^1.0.2",
     "dotenv": "^16.0.3",

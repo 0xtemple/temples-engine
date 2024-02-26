@@ -1,7 +1,7 @@
 import type { CommandModule } from "yargs";
 import { logError } from "../utils/errors";
 import { uploadHandler } from "../utils";
-import { loadConfig, TempleConfig } from "@0xtempl/common";
+import { loadConfig, TempleConfig } from "@0xtemple/common";
 
 type Options = {
   network: any;

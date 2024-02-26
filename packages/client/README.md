@@ -16,7 +16,7 @@ We create a Project called Counter and declare sigleton schema called counter, w
 
 
 ```typescript
-import { TempleConfig } from '@0xtempl/common';
+import { TempleConfig } from '@0xtemple/common';
 
 export const obeliskConfig = {
   name: 'counter',
@@ -65,7 +65,7 @@ We'll get the `packageId` and `worldId` on the command line.
 ### Init Temples Client
 
 ```typescript
-import { getMetadata, Temples, NetworkType } from "@0xtempl/client";
+import { getMetadata, Temples, NetworkType } from "@0xtemple/client";
 
 const network = "devnet" as NetworkType
 const packageId = "0x804578b9eed47d461bba52c393cf148302819e2ba0a0f558356cc419b3e941ed"
@@ -85,7 +85,7 @@ const temples = new Temples({
 If you need to call a method in the system, you can do so using the `temples.tx.moudleName.funcName()` form.
 
 ```typescript
-import { getMetadata, Temples, TransactionBlock } from "@0xtempl/client";
+import { getMetadata, Temples, TransactionBlock } from "@0xtemple/client";
 
 const metadata = await getMetadata(network, packageId);
 

@@ -1,4 +1,4 @@
-import { loadMetadata, Temples, TransactionBlock, TransactionResult } from '@0xtempl/client';
+import { loadMetadata, Temples, TransactionBlock, TransactionResult } from '@0xtemple/client';
 import { useEffect } from 'react';
 import { useAtom } from 'jotai';
 import { Value } from '../../jotai';

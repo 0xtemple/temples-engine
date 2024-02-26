@@ -1,4 +1,4 @@
-import { Ed25519Keypair, fromB64 } from '@0xtempl/client';
+import { Ed25519Keypair, fromB64 } from '@0xtemple/client';
 import * as fs from 'fs';
 
 function generateAccount() {

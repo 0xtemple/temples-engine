@@ -1,4 +1,4 @@
-import { BCS, loadMetadata, getSuiMoveConfig, Temples, TransactionBlock, TransactionResult } from '@0xtempl/client';
+import { BCS, loadMetadata, getSuiMoveConfig, Temples, TransactionBlock, TransactionResult } from '@0xtemple/client';
 import { useWallet } from '@suiet/wallet-kit';
 import { useEffect } from 'react';
 import { useAtom } from 'jotai';

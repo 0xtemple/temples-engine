@@ -1,3 +1,3 @@
-var temples = require('@0xtempl/client');
+var temples = require('@0xtemple/client');
 
 window.temples = temples;

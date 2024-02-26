@@ -31150,8 +31150,8 @@ if (!g.fetch) {
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],135:[function(require,module,exports){
-var temples = require('@0xtempl/client');
+var temples = require('@0xtemple/client');
 
 window.temples = temples;
 
-},{"@0xtempl/client":6}]},{},[135]);
+},{"@0xtemple/client":6}]},{},[135]);

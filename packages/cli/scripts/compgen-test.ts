@@ -1,4 +1,4 @@
-import { formatAndWriteMove } from "@0xtempl/common";
+import { formatAndWriteMove } from "@0xtemple/common";
 
 type SchemaMapType = Record<string, string>;
 type SchemaValueType = string;

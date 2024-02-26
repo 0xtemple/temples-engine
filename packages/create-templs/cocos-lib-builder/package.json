@@ -13,8 +13,8 @@
   "author": "team@0xtempl.com",
   "license": "ISC",
   "dependencies": {
-    "@0xtempl/client": "^0.5.10",
-    "@0xtempl/aptos-client": "^0.0.6",
+    "@0xtemple/client": "^0.5.10",
+    "@0xtemple/aptos-client": "^0.0.6",
     "browser-resolve": "^2.0.0",
     "browser-sync": "^2.29.3"
   },

@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var codegen_1 = require("@0xtempl/common/codegen");
+var codegen_1 = require("@0xtemple/common/codegen");
 function init() {
     return __awaiter(this, void 0, void 0, function () {
         var config, output, a;
