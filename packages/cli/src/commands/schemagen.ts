@@ -19,8 +19,8 @@ const commandModule: CommandModule<Options, Options> = {
 
   async handler({ configPath }) {
     try {
-      const obeliskConfig = (await loadConfig(configPath)) as TempleConfig;
-      worldgen(obeliskConfig);
+      const templeConfig = (await loadConfig(configPath)) as TempleConfig;
+      worldgen(templeConfig);
       process.exit(0);
     } catch (error: any) {
       console.log(chalk.red("Schemagen failed!"));

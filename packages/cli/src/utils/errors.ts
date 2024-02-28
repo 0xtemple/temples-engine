@@ -7,8 +7,8 @@ export class NotInsideProjectError extends Error {
   message = "You are not inside a Temples project";
 }
 
-export class ObeliskCliError extends Error {
-  name = "ObeliskCliError";
+export class TempleCliError extends Error {
+  name = "TempleCliError";
 }
 
 export class UpgradeError extends Error {
@@ -38,7 +38,7 @@ export function logError(error: unknown) {
         `To learn more about Temples's configuration, please go to https://github.com/0xtempl`
       )
     );
-  } else if (error instanceof ObeliskCliError) {
+  } else if (error instanceof TempleCliError) {
     console.log(chalk.red(error));
   } else {
     console.log(error);

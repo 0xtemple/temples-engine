@@ -51,7 +51,7 @@ export function getUseSchema(
 
 /**
  * @param values
- * @return [ name_schema::register(&mut _obelisk_world, ctx) ,info_schema::register(&mut _obelisk_world, ctx) ]
+ * @return [ name_schema::register(&mut _temple_world, ctx) ,info_schema::register(&mut _temple_world, ctx) ]
  */
 export function getRegisterSchema(
   values: Record<string, SchemaMapType>
@@ -61,7 +61,7 @@ export function getRegisterSchema(
     if (typeof value === "object" && value.ephemeral) {
     } else {
       registers.push(
-        `\t\t${key}_schema::register(&mut _obelisk_world, &admin_cap, ctx);`
+        `\t\t${key}_schema::register(&mut _temple_world, &admin_cap, ctx);`
       );
     }
   });
@@ -263,9 +263,9 @@ export function getStructAttrsQuery(
   prefixArgs: string
 ): string[] {
   return typeof values === "string"
-    ? [`${prefixArgs}_obelisk_data.value`]
+    ? [`${prefixArgs}_temple_data.value`]
     : Object.entries(values).map(
-        ([key, _]) => `${prefixArgs}_obelisk_data.${key}`
+        ([key, _]) => `${prefixArgs}_temple_data.${key}`
       );
 }
 
@@ -299,8 +299,8 @@ ${getStructAttrs(values, "\t\t\t").join(", \n")}
 }
 
 export function renderRegisterFunc(structName: string): string {
-  return `\tpublic fun register(_obelisk_world: &mut World, admin_cap: &AdminCap, ctx: &mut TxContext) {
-\t\tworld::add_schema<Table<address,${structName}>>(_obelisk_world, SCHEMA_ID, table::new<address, ${structName}>(ctx), admin_cap);
+  return `\tpublic fun register(_temple_world: &mut World, admin_cap: &AdminCap, ctx: &mut TxContext) {
+\t\tworld::add_schema<Table<address,${structName}>>(_temple_world, SCHEMA_ID, table::new<address, ${structName}>(ctx), admin_cap);
 \t}`;
 }
 
@@ -308,28 +308,28 @@ export function renderSetFunc(
   structName: string,
   values: Record<string, string> | string
 ): string {
-  return `\tpublic(friend) fun set(_obelisk_world: &mut World, _obelisk_entity_key: address, ${getStructAttrsWithType(
+  return `\tpublic(friend) fun set(_temple_world: &mut World, _temple_entity_key: address, ${getStructAttrsWithType(
     values,
     " "
   )}) {
-\t\tlet _obelisk_schema = world::get_mut_schema<Table<address,${structName}>>(_obelisk_world, SCHEMA_ID);
-\t\tlet _obelisk_data = new(${getStructAttrs(values, " ")});
-\t\tif(table::contains<address, ${structName}>(_obelisk_schema, _obelisk_entity_key)) {
-\t\t\t*table::borrow_mut<address, ${structName}>(_obelisk_schema, _obelisk_entity_key) = _obelisk_data;
+\t\tlet _temple_schema = world::get_mut_schema<Table<address,${structName}>>(_temple_world, SCHEMA_ID);
+\t\tlet _temple_data = new(${getStructAttrs(values, " ")});
+\t\tif(table::contains<address, ${structName}>(_temple_schema, _temple_entity_key)) {
+\t\t\t*table::borrow_mut<address, ${structName}>(_temple_schema, _temple_entity_key) = _temple_data;
 \t\t} else {
-\t\t\ttable::add(_obelisk_schema, _obelisk_entity_key, _obelisk_data);
+\t\t\ttable::add(_temple_schema, _temple_entity_key, _temple_data);
 \t\t};
-\t\tevents::emit_set(SCHEMA_ID, SCHEMA_TYPE, some(_obelisk_entity_key), _obelisk_data)
+\t\tevents::emit_set(SCHEMA_ID, SCHEMA_TYPE, some(_temple_entity_key), _temple_data)
 \t}
 `;
 }
 
 export function renderRemoveFunc(structName: string): string {
-  return `\tpublic(friend) fun remove(_obelisk_world: &mut World, _obelisk_entity_key: address) {
-\t\tlet _obelisk_schema = world::get_mut_schema<Table<address,${structName}>>(_obelisk_world, SCHEMA_ID);
-\t\tassert!(table::contains<address, ${structName}>(_obelisk_schema, _obelisk_entity_key), EEntityDoesNotExist);
-\t\ttable::remove(_obelisk_schema, _obelisk_entity_key);
-\t\tevents::emit_remove(SCHEMA_ID, _obelisk_entity_key)
+  return `\tpublic(friend) fun remove(_temple_world: &mut World, _temple_entity_key: address) {
+\t\tlet _temple_schema = world::get_mut_schema<Table<address,${structName}>>(_temple_world, SCHEMA_ID);
+\t\tassert!(table::contains<address, ${structName}>(_temple_schema, _temple_entity_key), EEntityDoesNotExist);
+\t\ttable::remove(_temple_schema, _temple_entity_key);
+\t\tevents::emit_remove(SCHEMA_ID, _temple_entity_key)
 \t}
 `;
 }
@@ -344,12 +344,12 @@ export function renderSetAttrsFunc(
         Object.entries(struct)
           .map(
             ([key, type]) =>
-              `\tpublic(friend) fun set_${key}(_obelisk_world: &mut World, _obelisk_entity_key: address, ${key}: ${type}) {
-\t\tlet _obelisk_schema = world::get_mut_schema<Table<address,${structName}>>(_obelisk_world, SCHEMA_ID);
-\t\tassert!(table::contains<address, ${structName}>(_obelisk_schema, _obelisk_entity_key), EEntityDoesNotExist);
-\t\tlet _obelisk_data = table::borrow_mut<address, ${structName}>(_obelisk_schema, _obelisk_entity_key);
-\t\t_obelisk_data.${key} = ${key};
-\t\tevents::emit_set(SCHEMA_ID, SCHEMA_TYPE, some(_obelisk_entity_key), *_obelisk_data)
+              `\tpublic(friend) fun set_${key}(_temple_world: &mut World, _temple_entity_key: address, ${key}: ${type}) {
+\t\tlet _temple_schema = world::get_mut_schema<Table<address,${structName}>>(_temple_world, SCHEMA_ID);
+\t\tassert!(table::contains<address, ${structName}>(_temple_schema, _temple_entity_key), EEntityDoesNotExist);
+\t\tlet _temple_data = table::borrow_mut<address, ${structName}>(_temple_schema, _temple_entity_key);
+\t\t_temple_data.${key} = ${key};
+\t\tevents::emit_set(SCHEMA_ID, SCHEMA_TYPE, some(_temple_entity_key), *_temple_data)
 \t}
 `
           )
@@ -360,12 +360,12 @@ export function renderGetAllFunc(
   structName: string,
   struct: MoveType | Record<string, MoveType>
 ): string {
-  return `\tpublic fun get(_obelisk_world: &World, _obelisk_entity_key: address): ${getStructTypes(
+  return `\tpublic fun get(_temple_world: &World, _temple_entity_key: address): ${getStructTypes(
     struct
   )} {
-\t\tlet _obelisk_schema = world::get_schema<Table<address,${structName}>>(_obelisk_world, SCHEMA_ID);
-\t\tassert!(table::contains<address, ${structName}>(_obelisk_schema, _obelisk_entity_key), EEntityDoesNotExist);
-\t\tlet _obelisk_data = table::borrow<address, ${structName}>(_obelisk_schema, _obelisk_entity_key);
+\t\tlet _temple_schema = world::get_schema<Table<address,${structName}>>(_temple_world, SCHEMA_ID);
+\t\tassert!(table::contains<address, ${structName}>(_temple_schema, _temple_entity_key), EEntityDoesNotExist);
+\t\tlet _temple_data = table::borrow<address, ${structName}>(_temple_schema, _temple_entity_key);
 \t\t(
 ${getStructAttrsQuery(struct, "\t\t\t").join(",\n")}
 \t\t)
@@ -385,11 +385,11 @@ export function renderGetAttrsFunc(
             ([
               key,
               type,
-            ]) => `\tpublic fun get_${key}(_obelisk_world: &World, _obelisk_entity_key: address): ${type} {
-\t\tlet _obelisk_schema = world::get_schema<Table<address,${structName}>>(_obelisk_world, SCHEMA_ID);
-\t\tassert!(table::contains<address, ${structName}>(_obelisk_schema, _obelisk_entity_key), EEntityDoesNotExist);
-\t\tlet _obelisk_data = table::borrow<address, ${structName}>(_obelisk_schema, _obelisk_entity_key);
-\t\t_obelisk_data.${key}
+            ]) => `\tpublic fun get_${key}(_temple_world: &World, _temple_entity_key: address): ${type} {
+\t\tlet _temple_schema = world::get_schema<Table<address,${structName}>>(_temple_world, SCHEMA_ID);
+\t\tassert!(table::contains<address, ${structName}>(_temple_schema, _temple_entity_key), EEntityDoesNotExist);
+\t\tlet _temple_data = table::borrow<address, ${structName}>(_temple_schema, _temple_entity_key);
+\t\t_temple_data.${key}
 \t}
 `
           )
@@ -397,9 +397,9 @@ export function renderGetAttrsFunc(
 }
 
 export function renderContainFunc(structName: string): string {
-  return `\tpublic fun contains(_obelisk_world: &World, _obelisk_entity_key: address): bool {
-\t\tlet _obelisk_schema = world::get_schema<Table<address,${structName}>>(_obelisk_world, SCHEMA_ID);
-\t\ttable::contains<address, ${structName}>(_obelisk_schema, _obelisk_entity_key)
+  return `\tpublic fun contains(_temple_world: &World, _temple_entity_key: address): bool {
+\t\tlet _temple_schema = world::get_schema<Table<address,${structName}>>(_temple_world, SCHEMA_ID);
+\t\ttable::contains<address, ${structName}>(_temple_schema, _temple_entity_key)
 \t}`;
 }
 
@@ -408,10 +408,10 @@ export function renderRegisterFuncWithInit(
   valueType: BaseType | Record<string, BaseType>,
   defaultValue: BaseValueType | Record<string, BaseValueType>
 ): string {
-  return `\tpublic fun register(_obelisk_world: &mut World, admin_cap: &AdminCap, _ctx: &mut TxContext) {
-\t\tlet _obelisk_schema = new(${getStructInitValue(valueType, defaultValue)});
-\t\tworld::add_schema<${structName}>(_obelisk_world, SCHEMA_ID, _obelisk_schema, admin_cap);
-\t\tevents::emit_set(SCHEMA_ID, SCHEMA_TYPE, none(), _obelisk_schema);
+  return `\tpublic fun register(_temple_world: &mut World, admin_cap: &AdminCap, _ctx: &mut TxContext) {
+\t\tlet _temple_schema = new(${getStructInitValue(valueType, defaultValue)});
+\t\tworld::add_schema<${structName}>(_temple_world, SCHEMA_ID, _temple_schema, admin_cap);
+\t\tevents::emit_set(SCHEMA_ID, SCHEMA_TYPE, none(), _temple_schema);
 \t}`;
 }
 
@@ -419,16 +419,16 @@ export function renderSingleSetFunc(
   structName: string,
   values: Record<string, string> | string
 ): string {
-  return `\tpublic(friend) fun set(_obelisk_world: &mut World, ${getStructAttrsWithType(
+  return `\tpublic(friend) fun set(_temple_world: &mut World, ${getStructAttrsWithType(
     values,
     " "
   )}) {
-\t\tlet _obelisk_schema = world::get_mut_schema<${structName}>(_obelisk_world, SCHEMA_ID);
+\t\tlet _temple_schema = world::get_mut_schema<${structName}>(_temple_world, SCHEMA_ID);
 ${
   typeof values === "string"
-    ? `\t\t_obelisk_schema.value = value;`
+    ? `\t\t_temple_schema.value = value;`
     : Object.entries(values)
-        .map(([key, _]) => `\t\t_obelisk_schema.${key} = ${key};`)
+        .map(([key, _]) => `\t\t_temple_schema.${key} = ${key};`)
         .join("\n")
 }
 \t}`;
@@ -444,10 +444,10 @@ export function renderSingleSetAttrsFunc(
         Object.entries(struct)
           .map(
             ([key, type]) => `
-\tpublic(friend) fun set_${key}(_obelisk_world: &mut World, ${key}: ${type}) {
-\t\tlet _obelisk_schema = world::get_mut_schema<${structName}>(_obelisk_world, SCHEMA_ID);
-\t\t_obelisk_schema.${key} = ${key};
-\t\tevents::emit_set(SCHEMA_ID, SCHEMA_TYPE, none(), *_obelisk_schema)
+\tpublic(friend) fun set_${key}(_temple_world: &mut World, ${key}: ${type}) {
+\t\tlet _temple_schema = world::get_mut_schema<${structName}>(_temple_world, SCHEMA_ID);
+\t\t_temple_schema.${key} = ${key};
+\t\tevents::emit_set(SCHEMA_ID, SCHEMA_TYPE, none(), *_temple_schema)
 \t}`
           )
           .join("\n");
@@ -457,14 +457,14 @@ export function renderSingleGetAllFunc(
   structName: string,
   values: MoveType | Record<string, MoveType>
 ): string {
-  return `\tpublic fun get(_obelisk_world: &World): ${getStructTypes(values)} {
-\t\tlet _obelisk_schema = world::get_schema<${structName}>(_obelisk_world, SCHEMA_ID);
+  return `\tpublic fun get(_temple_world: &World): ${getStructTypes(values)} {
+\t\tlet _temple_schema = world::get_schema<${structName}>(_temple_world, SCHEMA_ID);
 \t\t(
 ${
   typeof values === "string"
-    ? `\t\t\t_obelisk_schema.value`
+    ? `\t\t\t_temple_schema.value`
     : Object.entries(values)
-        .map(([key, _]) => `\t\t\t_obelisk_schema.${key},`)
+        .map(([key, _]) => `\t\t\t_temple_schema.${key},`)
         .join("\n")
 }
 \t\t)
@@ -481,9 +481,9 @@ export function renderSingleGetAttrsFunc(
         Object.entries(struct)
           .map(
             ([key, type]) => `
-\tpublic fun get_${key}(_obelisk_world: &World): ${type} {
-\t\tlet _obelisk_schema = world::get_schema<${structName}>(_obelisk_world, SCHEMA_ID);
-\t\t_obelisk_schema.${key}
+\tpublic fun get_${key}(_temple_world: &World): ${type} {
+\t\tlet _temple_schema = world::get_schema<${structName}>(_temple_world, SCHEMA_ID);
+\t\t_temple_schema.${key}
 \t}`
           )
           .join("\n");

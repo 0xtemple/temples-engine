@@ -1,7 +1,7 @@
 import * as fsAsync from "fs/promises";
 import { mkdirSync, writeFileSync } from "fs";
 import { exit } from "process";
-import { obeliskConfig } from "../assets/Scripts/temples.config";
+import { templeConfig } from "../assets/Scripts/temples.config";
 import { dirname } from "path";
 
 type DeploymentJsonType = {
@@ -60,7 +60,7 @@ async function writeOutput(
 async function main() {
   const path = process.cwd();
   const network = process.argv[2];
-  const contractPath = `${path}/contracts/${obeliskConfig.name}`;
+  const contractPath = `${path}/contracts/${templeConfig.name}`;
   const deployment = await getDeploymentJson(contractPath, network);
   storeConfig(deployment.network, deployment.packageId, deployment.worldId);
 }

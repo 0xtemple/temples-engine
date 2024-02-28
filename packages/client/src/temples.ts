@@ -74,7 +74,7 @@ export class Temples {
   readonly #query: MapMoudleFuncQuery = {};
   readonly #tx: MapMoudleFuncTx = {};
   /**
-   * Support the following ways to init the ObeliskClient:
+   * Support the following ways to init the TempleClient:
    * 1. mnemonics
    * 2. secretKey (base64 or hex)
    * If none of them is provided, will generate a random mnemonics with 24 words.
@@ -378,7 +378,7 @@ export class Temples {
   //   const worldObject = await this.getObject(worldId);
   //   const newObjectContent = worldObject.content;
   //   if (newObjectContent != null) {
-  //     const objectContent = newObjectContent as ObeliskObjectContent;
+  //     const objectContent = newObjectContent as TempleObjectContent;
   //     const objectFields = objectContent.fields as Record<string, any>;
   //     return objectFields['schema_names'];
   //   } else {

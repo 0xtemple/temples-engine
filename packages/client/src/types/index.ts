@@ -3,7 +3,7 @@ import type { SubmittableExtrinsic } from '@polkadot/api/submittable/types';
 
 // import { SuiMoveMoudleFuncType } from '../libs/suiContractFactory/types';
 
-// export type ObeliskObjectData = {
+// export type TempleObjectData = {
 //   objectId: string;
 //   objectType: string;
 //   objectVersion: number;
@@ -11,7 +11,7 @@ import type { SubmittableExtrinsic } from '@polkadot/api/submittable/types';
 //   objectFields: ObjectContentFields;
 // };
 
-// export type ObeliskObjectContent = {
+// export type TempleObjectContent = {
 //   dataType: 'moveObject';
 //   fields: MoveStruct;
 //   hasPublicTransfer: boolean;

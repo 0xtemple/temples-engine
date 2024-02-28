@@ -30,8 +30,8 @@ const commandModule: CommandModule<Options, Options> = {
 
   async handler({ network, configPath }) {
     try {
-      const obeliskConfig = (await loadConfig(configPath)) as TempleConfig;
-      await uploadHandler(obeliskConfig.name, network);
+      const templeConfig = (await loadConfig(configPath)) as TempleConfig;
+      await uploadHandler(templeConfig.name, network);
     } catch (error: any) {
       logError(error);
       process.exit(1);

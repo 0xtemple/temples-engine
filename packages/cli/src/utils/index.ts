@@ -1,4 +1,4 @@
 export * from "./uploadHandler";
 export * from "./errors";
-export * from "./printObelisk";
+export * from "./printTemple";
 export * from "./utils";

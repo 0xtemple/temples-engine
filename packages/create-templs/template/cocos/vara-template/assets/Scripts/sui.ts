@@ -1,5 +1,5 @@
 import { _decorator, Component, find, LabelComponent, sys } from "cc";
-import { obeliskConfig } from "./temples.config";
+import { templeConfig } from "./temples.config";
 import { NETWORK, PACKAGE_ID, WORLD_ID } from "./chain/config";
 
 const { ccclass, property } = _decorator;
@@ -12,32 +12,32 @@ export class sui extends Component {
 
   async sui_account_create() {
     // @ts-ignore
-    const obelisk_sdk = window.temples;
+    const temple_sdk = window.temples;
     const decode = JSON.parse(sys.localStorage.getItem("userWalletData"));
     if (decode == null) {
-      const keypair = new obelisk_sdk.Ed25519Keypair();
+      const keypair = new temple_sdk.Ed25519Keypair();
       const wallet = keypair.export();
       const code = JSON.stringify(wallet);
       sys.localStorage.setItem("userWalletData", code);
-      const metadata = await obelisk_sdk.loadMetadata(NETWORK, PACKAGE_ID);
-      const temples = new obelisk_sdk.Temples({
+      const metadata = await temple_sdk.loadMetadata(NETWORK, PACKAGE_ID);
+      const temples = new temple_sdk.Temples({
         networkType: NETWORK,
         packageId: PACKAGE_ID,
         metadata: metadata,
       });
       const address = keypair.getPublicKey().toSuiAddress();
       await temples.requestFaucet(address, NETWORK);
-      const component_name = Object.keys(obeliskConfig.schemas)[0];
+      const component_name = Object.keys(templeConfig.schemas)[0];
       const component_value = await temples.getEntity(WORLD_ID, component_name);
       console.log(component_value);
     } else {
-      const metadata = await obelisk_sdk.loadMetadata(NETWORK, PACKAGE_ID);
-      const temples = new obelisk_sdk.Temples({
+      const metadata = await temple_sdk.loadMetadata(NETWORK, PACKAGE_ID);
+      const temples = new temple_sdk.Temples({
         networkType: NETWORK,
         packageId: PACKAGE_ID,
         metadata: metadata,
       });
-      const component_name = Object.keys(obeliskConfig.schemas)[0];
+      const component_name = Object.keys(templeConfig.schemas)[0];
       const component_value = await temples.getEntity(WORLD_ID, component_name);
       const counter_node = find("Canvas/Camera/counter");
       const label = counter_node.getComponent("cc.Label") as LabelComponent;
@@ -47,12 +47,12 @@ export class sui extends Component {
 
   async export_wallet() {
     // @ts-ignore
-    const obelisk_sdk = window.temples;
-    const fromB64 = obelisk_sdk.fromB64;
+    const temple_sdk = window.temples;
+    const fromB64 = temple_sdk.fromB64;
     const decode = JSON.parse(sys.localStorage.getItem("userWalletData"));
     const decode_private_key = decode.privateKey;
     const base_64_privkey = fromB64(decode_private_key);
-    const keypair = obelisk_sdk.Ed25519Keypair.fromSecretKey(base_64_privkey, {
+    const keypair = temple_sdk.Ed25519Keypair.fromSecretKey(base_64_privkey, {
       skipValidation: false,
     });
     const address = keypair.getPublicKey().toSuiAddress();
@@ -65,20 +65,20 @@ export class sui extends Component {
 
   async gameStart() {
     // @ts-ignore
-    const obelisk_sdk = window.temples;
-    const metadata = await obelisk_sdk.loadMetadata(NETWORK, PACKAGE_ID);
+    const temple_sdk = window.temples;
+    const metadata = await temple_sdk.loadMetadata(NETWORK, PACKAGE_ID);
     console.log(metadata);
 
     const privateKey = await this.export_wallet();
     // new temples class
-    const temples = new obelisk_sdk.Temples({
+    const temples = new temple_sdk.Temples({
       networkType: NETWORK,
       packageId: PACKAGE_ID,
       metadata: metadata,
       secretKey: privateKey,
     });
 
-    const tx = new obelisk_sdk.TransactionBlock();
+    const tx = new temple_sdk.TransactionBlock();
     const world = tx.pure(WORLD_ID);
 
     const params = [world];
@@ -86,13 +86,13 @@ export class sui extends Component {
     const result = await temples.tx.counter_system.inc(tx, params);
     console.log(result);
     setTimeout(async () => {
-      const metadata = await obelisk_sdk.loadMetadata(NETWORK, PACKAGE_ID);
-      const temples = new obelisk_sdk.Temples({
+      const metadata = await temple_sdk.loadMetadata(NETWORK, PACKAGE_ID);
+      const temples = new temple_sdk.Temples({
         networkType: NETWORK,
         packageId: PACKAGE_ID,
         metadata: metadata,
       });
-      const component_name = Object.keys(obeliskConfig.schemas)[0];
+      const component_name = Object.keys(templeConfig.schemas)[0];
       const component_value = await temples.getEntity(WORLD_ID, component_name);
       const counter_node = find("Canvas/Camera/counter");
       const label = counter_node.getComponent("cc.Label") as LabelComponent;

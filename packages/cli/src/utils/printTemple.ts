@@ -1,6 +1,6 @@
 import chalk from "chalk";
 
-export function printObelisk() {
+export function printTemple() {
   console.log(
     chalk.yellow(`
 Welcome to temples world

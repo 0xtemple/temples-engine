@@ -1,5 +1,5 @@
 import type { CommandModule } from "yargs";
-import { printObelisk } from "../utils";
+import { printTemple } from "../utils";
 
 const commandModule: CommandModule = {
   command: "hello",
@@ -11,7 +11,7 @@ const commandModule: CommandModule = {
   },
 
   async handler() {
-    printObelisk();
+    printTemple();
   },
 };
 
