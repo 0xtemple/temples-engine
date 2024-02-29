@@ -1,11 +1,11 @@
 {
   "name": "@0xtemple/cli",
-  "version": "0.5.6",
+  "version": "0.0.1",
   "description": "Tookit for interacting with vara eps framework",
   "keywords": [
-    "sui",
+    "gear",
+    "vara",
     "temples labs",
-    "move",
     "blockchain"
   ],
   "type": "module",

@@ -1,11 +1,11 @@
 {
   "name": "@0xtemple/common",
-  "version": "0.5.6",
+  "version": "0.0.1",
   "description": "Common low level logic shared between packages",
   "keywords": [
-    "sui",
+    "gear",
+    "vara",
     "temples labs",
-    "move",
     "blockchain"
   ],
   "type": "module",

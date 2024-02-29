@@ -17,16 +17,16 @@ const init = async () => {
       message: "Input your projectName.",
       initial: defaultTargetDir,
     },
-    {
-      type: "select",
-      name: "chain",
-      message: "Pick your chain.",
-      choices: [
-        { title: "sui", description: "Sui", value: "sui" },
-        { title: "aptos", description: "Aptos", value: "aptos" },
-      ],
-      initial: 0,
-    },
+    // {
+    //   type: "select",
+    //   name: "chain",
+    //   message: "Pick your chain.",
+    //   choices: [
+    //     { title: "sui", description: "Sui", value: "sui" },
+    //     { title: "aptos", description: "Aptos", value: "aptos" },
+    //   ],
+    //   initial: 0,
+    // },
     {
       type: "select",
       name: "platform",
@@ -55,15 +55,15 @@ const init = async () => {
       initial: 0,
     },
   ]);
-  const { projectName, chain, platform, framework } = response;
+  const { projectName, platform, framework } = response;
   let target = "";
 
   if (platform === "101") {
-    target = `template/101/${chain}-template`;
+    target = `template/101/vara-template`;
   } else if (platform === "web") {
-    target = `template/nextjs/${chain}-template`;
+    target = `template/nextjs/vara-template`;
   } else {
-    target = `template/cocos/${chain}-template`;
+    target = `template/cocos/vara-template`;
   }
 
   let targetDir = projectName || defaultTargetDir;

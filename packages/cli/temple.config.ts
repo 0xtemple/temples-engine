@@ -3,22 +3,28 @@ import { TempleConfig } from "@0xtemple/common";
 export const templeConfig = {
   name: "examples",
   schemas: {
-    test1: {
+    counter: {
       keyType: {},
       valueType: {
-        state: "Vec<u8>",
-        last_update_time: "u64",
+        value: "u64",
       },
     },
-    test2: {
-      keyType: {
-        key: "u128",
-      },
-      valueType: {
-        state: "Vec<u8>",
-        last_update_time: "u64",
-      },
-    },
+    // test1: {
+    //   keyType: {},
+    //   valueType: {
+    //     state: "Vec<u8>",
+    //     last_update_time: "u64",
+    //   },
+    // },
+    // test2: {
+    //   keyType: {
+    //     key: "u128",
+    //   },
+    //   valueType: {
+    //     state: "Vec<u8>",
+    //     last_update_time: "u64",
+    //   },
+    // },
     // multi_column: {
     //   valueType: {
     //     state: "Vec<u8>",
