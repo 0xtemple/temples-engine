@@ -1,0 +1,13 @@
+[package]
+name = "counter"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+gstd = { git = "https://github.com/gear-tech/gear.git", tag = "v1.1.1", features = ["debug"] }
+gmeta = { git = "https://github.com/gear-tech/gear", tag = "v1.1.1" }
+counter-io = { path = "io" }
+
+[build-dependencies]
+counter-io = { path = "io" }
+gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git", tag = "v1.1.1" }
