@@ -1,0 +1,9 @@
+/Users/feng/Desktop/obelisk/temples-engine/packages/create-temple/template/101/vara-template/contracts/target/wasm-projects/release/release/deps/libcargo_platform-59a2ee405b354832.rmeta: /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/cargo-platform-0.1.7/src/lib.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/cargo-platform-0.1.7/src/cfg.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/cargo-platform-0.1.7/src/error.rs
+
+/Users/feng/Desktop/obelisk/temples-engine/packages/create-temple/template/101/vara-template/contracts/target/wasm-projects/release/release/deps/libcargo_platform-59a2ee405b354832.rlib: /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/cargo-platform-0.1.7/src/lib.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/cargo-platform-0.1.7/src/cfg.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/cargo-platform-0.1.7/src/error.rs
+
+/Users/feng/Desktop/obelisk/temples-engine/packages/create-temple/template/101/vara-template/contracts/target/wasm-projects/release/release/deps/cargo_platform-59a2ee405b354832.d: /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/cargo-platform-0.1.7/src/lib.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/cargo-platform-0.1.7/src/cfg.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/cargo-platform-0.1.7/src/error.rs
+
+/Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/cargo-platform-0.1.7/src/lib.rs:
+/Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/cargo-platform-0.1.7/src/cfg.rs:
+/Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/cargo-platform-0.1.7/src/error.rs:

@@ -5,9 +5,9 @@
   "author": "team@0xtempl.com",
   "license": "MIT",
   "scripts": {
-    "dev": "pnpm temples hello && pnpm run start-template",
-    "dev:docker": "pnpm run localnode:docker && sleep 5 && ts-node scripts/generateAccount.ts && pnpm temples faucet --network localnet && pnpm temples publish --network localnet && ts-node scripts/storeConfig.ts localnet && next",
-    "start-template": "pnpm run localnode && sleep 5 && ts-node scripts/generateAccount.ts && pnpm temples faucet --network localnet && pnpm temples publish --network localnet && ts-node scripts/storeConfig.ts localnet && next",
+    "dev": "pnpm run start-template",
+    "dev:docker": "pnpm run localnode:docker && sleep 5 && ts-node scripts/generateAccount.ts && pnpm temples faucet --network localnet && pnpm temples upload && ts-node scripts/storeConfig.ts localnet && next",
+    "start-template": "pnpm run localnode && sleep 5 && ts-node scripts/generateAccount.ts && pnpm temples faucet --network localnet && pnpm temples upload && ts-node scripts/storeConfig.ts localnet && next",
     "next": "next",
     "build": "next build",
     "start": "next start",
@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@0xtemple/common": "^0.0.1",
-    "@0xtemple/client": "^0.0.1",
+    "@0xtemple/client": "^0.0.2",
     "@0xtemple/cli": "^0.0.1",
     "clsx": "^1.2.1",
     "framer-motion": "^10.12.16",

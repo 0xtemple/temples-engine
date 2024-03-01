@@ -1,0 +1,9 @@
+/Users/feng/Desktop/obelisk/temples-engine/packages/create-temple/template/101/vara-template/contracts/target/wasm-projects/release/release/deps/libindexmap_nostd-bdd5133d24d24919.rmeta: /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/indexmap-nostd-0.4.0/src/lib.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/indexmap-nostd-0.4.0/src/map.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/indexmap-nostd-0.4.0/src/set.rs
+
+/Users/feng/Desktop/obelisk/temples-engine/packages/create-temple/template/101/vara-template/contracts/target/wasm-projects/release/release/deps/libindexmap_nostd-bdd5133d24d24919.rlib: /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/indexmap-nostd-0.4.0/src/lib.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/indexmap-nostd-0.4.0/src/map.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/indexmap-nostd-0.4.0/src/set.rs
+
+/Users/feng/Desktop/obelisk/temples-engine/packages/create-temple/template/101/vara-template/contracts/target/wasm-projects/release/release/deps/indexmap_nostd-bdd5133d24d24919.d: /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/indexmap-nostd-0.4.0/src/lib.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/indexmap-nostd-0.4.0/src/map.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/indexmap-nostd-0.4.0/src/set.rs
+
+/Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/indexmap-nostd-0.4.0/src/lib.rs:
+/Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/indexmap-nostd-0.4.0/src/map.rs:
+/Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/indexmap-nostd-0.4.0/src/set.rs:

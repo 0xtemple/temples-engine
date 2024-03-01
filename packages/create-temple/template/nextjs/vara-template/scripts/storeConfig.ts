@@ -1,21 +1,19 @@
 import * as fsAsync from 'fs/promises';
 import { mkdirSync, writeFileSync } from 'fs';
 import { exit } from 'process';
-import { templeConfig } from '../temples.config';
+import { templeConfig } from '../temple.config';
 import { dirname } from 'path';
 
 type DeploymentJsonType = {
   projectName: string;
-  network: 'mainnet' | 'testnet' | 'devnet' | 'localnet';
-  packageId: string;
-  worldId: string;
-  upgradeCap: string;
-  version: number;
+  network: 'mainnet' | 'testnet' | 'localnet';
+  programId: string;
+  metadata: string;
 };
 
 async function getDeploymentJson(projectPath: string, network: string) {
   try {
-    const data = await fsAsync.readFile(`${projectPath}/.history/sui_${network}/latest.json`, 'utf8');
+    const data = await fsAsync.readFile(`.history/vara_${network}/latest.json`, 'utf8');
     return JSON.parse(data) as DeploymentJsonType;
   } catch {
     console.log('store config failed.');
@@ -23,18 +21,19 @@ async function getDeploymentJson(projectPath: string, network: string) {
   }
 }
 
-function storeConfig(network: string, packageId: string, worldId: string) {
-  let code = `type NetworkType = 'testnet' | 'mainnet' | 'devnet' | 'localnet';
+function storeConfig(network: string, packageId: string, metadata: string) {
+  let code = `type NetworkType = 'testnet' | 'mainnet' | 'localnet';
 
 const NETWORK: NetworkType = '${network}';
 
 const PACKAGE_ID = '${packageId}'
-const WORLD_ID = '${worldId}'
+
+const METADATA = '${metadata}'
 
 export {
     NETWORK,
     PACKAGE_ID,
-    WORLD_ID,
+    METADATA
 }
 `;
   const path = process.cwd();

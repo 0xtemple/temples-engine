@@ -1,0 +1,9 @@
+/Users/feng/Desktop/obelisk/temples-engine/packages/create-temple/template/101/vara-template/contracts/target/wasm-projects/release/release/deps/libfutures_channel-0c409dcfb82956d7.rmeta: /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/futures-channel-0.3.30/src/lib.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/futures-channel-0.3.30/src/lock.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/futures-channel-0.3.30/src/oneshot.rs
+
+/Users/feng/Desktop/obelisk/temples-engine/packages/create-temple/template/101/vara-template/contracts/target/wasm-projects/release/release/deps/libfutures_channel-0c409dcfb82956d7.rlib: /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/futures-channel-0.3.30/src/lib.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/futures-channel-0.3.30/src/lock.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/futures-channel-0.3.30/src/oneshot.rs
+
+/Users/feng/Desktop/obelisk/temples-engine/packages/create-temple/template/101/vara-template/contracts/target/wasm-projects/release/release/deps/futures_channel-0c409dcfb82956d7.d: /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/futures-channel-0.3.30/src/lib.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/futures-channel-0.3.30/src/lock.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/futures-channel-0.3.30/src/oneshot.rs
+
+/Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/futures-channel-0.3.30/src/lib.rs:
+/Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/futures-channel-0.3.30/src/lock.rs:
+/Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/futures-channel-0.3.30/src/oneshot.rs:

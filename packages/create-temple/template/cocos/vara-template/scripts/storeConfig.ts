@@ -16,7 +16,7 @@ type DeploymentJsonType = {
 async function getDeploymentJson(projectPath: string, network: string) {
   try {
     const data = await fsAsync.readFile(
-      `${projectPath}/.history/sui_${network}/latest.json`,
+      `.history/vara_${network}/latest.json`,
       "utf8"
     );
     return JSON.parse(data) as DeploymentJsonType;

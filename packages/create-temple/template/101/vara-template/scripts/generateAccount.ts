@@ -1,26 +1,30 @@
-import { Ed25519Keypair, fromB64 } from '@0xtemple/client';
+import { Temples, GearKeyring } from '@0xtemple/client';
 import * as fs from 'fs';
+import { generateMnemonic as genMnemonic } from '@scure/bip39';
+import { wordlist } from '@scure/bip39/wordlists/english';
 
-function generateAccount() {
-  const keypair = new Ed25519Keypair();
+export const generateMnemonic = (numberOfWords: 12 | 24 = 24) => {
+  const strength = numberOfWords === 12 ? 128 : 256;
+  return genMnemonic(wordlist, strength);
+};
 
-  const privateKey_u8 = fromB64(keypair.export().privateKey);
-  const privateKey = Buffer.from(privateKey_u8).toString('hex');
-
+async function generateAccount() {
+  const mnemonic = generateMnemonic(12);
+  const keyring = await GearKeyring.fromMnemonic(mnemonic);
   const path = process.cwd();
   const chainFolderPath = `${path}/src/chain`;
   fs.mkdirSync(chainFolderPath, { recursive: true });
 
-  fs.writeFileSync(`${path}/.env`, `PRIVATE_KEY=${privateKey}`);
+  fs.writeFileSync(`${path}/.env`, `MNEMONIC='${mnemonic}'`);
 
   fs.writeFileSync(
     `${path}/src/chain/key.ts`,
-    `export const PRIVATEKEY = '${privateKey}';
-export const ACCOUNT = '${keypair.toSuiAddress()}';
-`,
+    `export const PRIVATEKEY = '${mnemonic}';
+export const ACCOUNT = '${keyring.address}';
+  `,
   );
 
-  console.log(`Generate new Account: ${keypair.toSuiAddress()}`);
+  console.log(`Generate new Account: ${keyring.address}`);
 }
 
 generateAccount();

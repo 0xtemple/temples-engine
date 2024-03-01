@@ -1,0 +1,8 @@
+/Users/feng/Desktop/obelisk/temples-engine/packages/create-temple/template/101/vara-template/contracts/target/release/deps/libscale_info_derive-b072222402b2e3d7.dylib: /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/scale-info-derive-2.10.0/src/lib.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/scale-info-derive-2.10.0/src/attr.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/scale-info-derive-2.10.0/src/trait_bounds.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/scale-info-derive-2.10.0/src/utils.rs
+
+/Users/feng/Desktop/obelisk/temples-engine/packages/create-temple/template/101/vara-template/contracts/target/release/deps/scale_info_derive-b072222402b2e3d7.d: /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/scale-info-derive-2.10.0/src/lib.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/scale-info-derive-2.10.0/src/attr.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/scale-info-derive-2.10.0/src/trait_bounds.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/scale-info-derive-2.10.0/src/utils.rs
+
+/Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/scale-info-derive-2.10.0/src/lib.rs:
+/Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/scale-info-derive-2.10.0/src/attr.rs:
+/Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/scale-info-derive-2.10.0/src/trait_bounds.rs:
+/Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/scale-info-derive-2.10.0/src/utils.rs:

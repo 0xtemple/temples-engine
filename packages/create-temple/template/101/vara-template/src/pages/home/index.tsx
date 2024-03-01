@@ -1,10 +1,10 @@
-import { loadMetadata, Temples, TransactionBlock, TransactionResult } from '@0xtemple/client';
+import { Temples } from '@0xtemple/client';
 import { useEffect } from 'react';
 import { useAtom } from 'jotai';
 import { Value } from '../../jotai';
 import { useRouter } from 'next/router';
-import { NETWORK, PACKAGE_ID, WORLD_ID } from '../../chain/config';
-import { obeliskConfig } from '../../../temples.config';
+import { NETWORK, PACKAGE_ID, METADATA } from '../../chain/config';
+import { templeConfig } from '../../../temple.config';
 import { PRIVATEKEY } from '../../chain/key';
 
 const Home = () => {
@@ -12,44 +12,33 @@ const Home = () => {
   const [value, setValue] = useAtom(Value);
 
   const counter = async () => {
-    const metadata = await loadMetadata(NETWORK, PACKAGE_ID);
+    // const metadata = await loadMetadata(NETWORK, PACKAGE_ID);
     const temples = new Temples({
       networkType: NETWORK,
       packageId: PACKAGE_ID,
-      metadata: metadata,
-      secretKey: PRIVATEKEY,
+      metadata: METADATA,
+      mnemonics: PRIVATEKEY,
     });
-    const tx = new TransactionBlock();
-    const world = tx.pure(WORLD_ID);
-    const params = [world];
-    (await temples.tx.counter_system.inc(tx, params, undefined, true)) as TransactionResult;
-    const response = await temples.signAndSendTxn(tx);
-    if (response.effects.status.status == 'success') {
-      const metadata = await loadMetadata(NETWORK, PACKAGE_ID);
-      const temples = new Temples({
-        networkType: NETWORK,
-        packageId: PACKAGE_ID,
-        metadata: metadata,
-      });
-      const component_name = Object.keys(obeliskConfig.schemas)[0];
-      const component_value = await temples.getEntity(WORLD_ID, component_name);
-      setValue(component_value[0]);
-    }
+    console.log(METADATA);
+    console.log(temples.getAllTypes());
+    await temples.tx.contract.Add();
+
+    const component_value = await temples.query.contract.GetCurrentNumber();
+    console.log(component_value);
+    setValue(component_value['data']);
   };
 
   useEffect(() => {
     if (router.isReady) {
       const query_counter = async () => {
-        const metadata = await loadMetadata(NETWORK, PACKAGE_ID);
         const temples = new Temples({
           networkType: NETWORK,
           packageId: PACKAGE_ID,
-          metadata: metadata,
+          metadata: METADATA,
         });
-        // counter component name
-        const component_name = Object.keys(obeliskConfig.schemas)[0];
-        const component_value = await temples.getEntity(WORLD_ID, component_name);
-        setValue(component_value[0]);
+        const component_value = await temples.query.contract.GetCurrentNumber();
+        console.log(component_value);
+        setValue(component_value['data']);
       };
       query_counter();
     }

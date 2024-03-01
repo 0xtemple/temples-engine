@@ -1,0 +1,10 @@
+/Users/feng/Desktop/obelisk/temples-engine/packages/create-temple/template/101/vara-template/contracts/target/wasm-projects/release/wasm32-unknown-unknown/release/deps/libcrunchy-2eea6d0dfe35ebdb.rmeta: /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/crunchy-0.2.2/src/lib.rs /Users/feng/Desktop/obelisk/temples-engine/packages/create-temple/template/101/vara-template/contracts/target/wasm-projects/release/wasm32-unknown-unknown/release/build/crunchy-2d20fb5bf56c8ee8/out/lib.rs
+
+/Users/feng/Desktop/obelisk/temples-engine/packages/create-temple/template/101/vara-template/contracts/target/wasm-projects/release/wasm32-unknown-unknown/release/deps/libcrunchy-2eea6d0dfe35ebdb.rlib: /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/crunchy-0.2.2/src/lib.rs /Users/feng/Desktop/obelisk/temples-engine/packages/create-temple/template/101/vara-template/contracts/target/wasm-projects/release/wasm32-unknown-unknown/release/build/crunchy-2d20fb5bf56c8ee8/out/lib.rs
+
+/Users/feng/Desktop/obelisk/temples-engine/packages/create-temple/template/101/vara-template/contracts/target/wasm-projects/release/wasm32-unknown-unknown/release/deps/crunchy-2eea6d0dfe35ebdb.d: /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/crunchy-0.2.2/src/lib.rs /Users/feng/Desktop/obelisk/temples-engine/packages/create-temple/template/101/vara-template/contracts/target/wasm-projects/release/wasm32-unknown-unknown/release/build/crunchy-2d20fb5bf56c8ee8/out/lib.rs
+
+/Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/crunchy-0.2.2/src/lib.rs:
+/Users/feng/Desktop/obelisk/temples-engine/packages/create-temple/template/101/vara-template/contracts/target/wasm-projects/release/wasm32-unknown-unknown/release/build/crunchy-2d20fb5bf56c8ee8/out/lib.rs:
+
+# env-dep:OUT_DIR=/Users/feng/Desktop/obelisk/temples-engine/packages/create-temple/template/101/vara-template/contracts/target/wasm-projects/release/wasm32-unknown-unknown/release/build/crunchy-2d20fb5bf56c8ee8/out

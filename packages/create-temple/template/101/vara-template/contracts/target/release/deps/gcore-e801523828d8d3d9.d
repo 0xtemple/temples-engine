@@ -1,0 +1,13 @@
+/Users/feng/Desktop/obelisk/temples-engine/packages/create-temple/template/101/vara-template/contracts/target/release/deps/libgcore-e801523828d8d3d9.rmeta: /Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/gcore/src/lib.rs /Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/gcore/src/errors.rs /Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/gcore/src/exec.rs /Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/gcore/src/msg.rs /Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/gcore/src/prog.rs /Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/gcore/src/general.rs /Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/gcore/src/utils.rs
+
+/Users/feng/Desktop/obelisk/temples-engine/packages/create-temple/template/101/vara-template/contracts/target/release/deps/libgcore-e801523828d8d3d9.rlib: /Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/gcore/src/lib.rs /Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/gcore/src/errors.rs /Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/gcore/src/exec.rs /Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/gcore/src/msg.rs /Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/gcore/src/prog.rs /Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/gcore/src/general.rs /Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/gcore/src/utils.rs
+
+/Users/feng/Desktop/obelisk/temples-engine/packages/create-temple/template/101/vara-template/contracts/target/release/deps/gcore-e801523828d8d3d9.d: /Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/gcore/src/lib.rs /Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/gcore/src/errors.rs /Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/gcore/src/exec.rs /Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/gcore/src/msg.rs /Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/gcore/src/prog.rs /Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/gcore/src/general.rs /Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/gcore/src/utils.rs
+
+/Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/gcore/src/lib.rs:
+/Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/gcore/src/errors.rs:
+/Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/gcore/src/exec.rs:
+/Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/gcore/src/msg.rs:
+/Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/gcore/src/prog.rs:
+/Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/gcore/src/general.rs:
+/Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/gcore/src/utils.rs:
