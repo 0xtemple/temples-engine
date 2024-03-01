@@ -112,7 +112,7 @@ export class Temples {
       const metaraw = ProgramMetadata.from(metadata);
       const allTypes = metaraw.getAllTypes();
       try {
-        const stateInRegex = /StateIn$/;
+        const stateInRegex = /StateQuery$/;
         const systemActionRegex = /SystemAction$/;
         for (const [key, value] of Object.entries(allTypes)) {
           let execEnumObj = null;
