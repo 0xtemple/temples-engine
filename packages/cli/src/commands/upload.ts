@@ -42,6 +42,9 @@ const commandModule: CommandModule<Options, Options> = {
     const gearApi = await GearApi.create({
       providerAddress: "ws://localhost:9944",
     });
+    if (!gearApi.isConnected) {
+      await gearApi.connect();
+    }
     const templeConfig = (await loadConfig(configPath)) as TempleConfig;
     console.log(templeConfig.name);
     const path = process.cwd();
@@ -74,7 +77,8 @@ const commandModule: CommandModule<Options, Options> = {
       "utf-8"
     );
     const meta = ProgramMetadata.from(`0x${metaHex}`);
-
+    console.log(chalk.blue(`Saving contract info...`));
+    await new Promise((resolve) => setTimeout(resolve, 3000));
     const { programId, codeId, salt, extrinsic } = gearApi.program.upload(
       program,
       meta
@@ -93,7 +97,7 @@ const commandModule: CommandModule<Options, Options> = {
     console.log(chalk.blue(`Contract program id: ${programId}`));
     saveContractData(templeConfig.name, network, programId, metaHex);
 
-    process.exit(0);
+    await gearApi.disconnect();
   },
 };
 

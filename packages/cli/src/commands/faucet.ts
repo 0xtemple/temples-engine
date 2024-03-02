@@ -46,12 +46,16 @@ const commandModule: CommandModule<Options, Options> = {
 
     const wsProvider = new WsProvider("ws://localhost:9944");
     const gearApi = await ApiPromise.create({ provider: wsProvider });
+    if (!gearApi.isConnected) {
+      await gearApi.connect();
+    }
 
     const aliceKeyring = await GearKeyring.fromSuri("//Alice");
     const result = await gearApi.tx.balances
       .transfer(address, 1000e12)
       .signAndSend(aliceKeyring);
     console.log(address);
+    await gearApi.disconnect();
   },
 };
 
