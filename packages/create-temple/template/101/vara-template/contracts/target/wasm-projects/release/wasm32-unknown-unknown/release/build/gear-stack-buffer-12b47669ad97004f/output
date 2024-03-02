@@ -1,2 +1,0 @@
-cargo:rustc-link-lib=static=calloca
-cargo:rustc-link-search=native=/Users/feng/.cargo/git/checkouts/gear-bdc2b7d48ef3acbd/33ee05d/stack-buffer/alloca

@@ -45,3 +45,4 @@ sui.log.*
 # rust
 contracts/target
 contracts/.binpath
+*/target

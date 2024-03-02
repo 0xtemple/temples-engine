@@ -24,10 +24,10 @@
     zod "^3.22.3"
     zod-validation-error "^1.3.0"
 
-"@0xtemple/client@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.npmjs.org/@0xtemple/client/-/client-0.0.1.tgz#01c9c41a44dd85274dbe520f6a7a4e0a5f73c93e"
-  integrity sha512-GH3nicYY2j2y/9VJyE0PMaT2peQsElUZBIY1z+Isjja8zXOdmsGc+wAjamM6luUQzlcG4jQMKpGcsLkbUrDguQ==
+"@0xtemple/client@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.npmjs.org/@0xtemple/client/-/client-0.0.3.tgz#76192ec2254bf60f3f031bcece0935e48ef0795f"
+  integrity sha512-ZASLNw5w3T4E4b2RA8bPm02gjN3YkQgkgHwMPQp+04cnNV49Xcq82R1+QuW1dQxP9yxzzkZpSGWYwf8ahSwtQQ==
   dependencies:
     "@gear-js/api" "^0.36.5"
     "@noble/curves" "^1.2.0"

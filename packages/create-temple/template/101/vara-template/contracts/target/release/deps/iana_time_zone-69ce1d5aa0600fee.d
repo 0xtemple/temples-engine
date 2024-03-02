@@ -1,9 +1,0 @@
-/Users/feng/Desktop/obelisk/temples-engine/packages/create-temple/template/101/vara-template/contracts/target/release/deps/libiana_time_zone-69ce1d5aa0600fee.rmeta: /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/iana-time-zone-0.1.60/src/lib.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/iana-time-zone-0.1.60/src/ffi_utils.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/iana-time-zone-0.1.60/src/tz_macos.rs
-
-/Users/feng/Desktop/obelisk/temples-engine/packages/create-temple/template/101/vara-template/contracts/target/release/deps/libiana_time_zone-69ce1d5aa0600fee.rlib: /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/iana-time-zone-0.1.60/src/lib.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/iana-time-zone-0.1.60/src/ffi_utils.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/iana-time-zone-0.1.60/src/tz_macos.rs
-
-/Users/feng/Desktop/obelisk/temples-engine/packages/create-temple/template/101/vara-template/contracts/target/release/deps/iana_time_zone-69ce1d5aa0600fee.d: /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/iana-time-zone-0.1.60/src/lib.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/iana-time-zone-0.1.60/src/ffi_utils.rs /Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/iana-time-zone-0.1.60/src/tz_macos.rs
-
-/Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/iana-time-zone-0.1.60/src/lib.rs:
-/Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/iana-time-zone-0.1.60/src/ffi_utils.rs:
-/Users/feng/.cargo/registry/src/mirrors.tuna.tsinghua.edu.cn-df7c3c540f42cdbd/iana-time-zone-0.1.60/src/tz_macos.rs:
