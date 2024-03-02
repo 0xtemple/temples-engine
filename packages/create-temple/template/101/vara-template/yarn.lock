@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@0xtemple/cli@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.npmjs.org/@0xtemple/cli/-/cli-0.0.1.tgz#6cb5ab6bf1bc273ad5ac6525a1ce5fd9d1e79c8a"
-  integrity sha512-PQJ/s3v9bRg/Ouy+3kYBwJXUHHacD/tlsBqyR/H23TCSg/xKVs/w+L4SZZuYLuwR0/GLxjt6LeEcSbg3FIjgjw==
+"@0xtemple/cli@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.npmjs.org/@0xtemple/cli/-/cli-0.0.2.tgz#50abb9cab4fcf1b1664ba7932291d1fc2a89afc7"
+  integrity sha512-ce/dBbI+6b8ih/16qzPNk1M2oZdhUiGR7YWZl7AmoPY418ZQMab3KQPxsNH1X1QbQvkmM13+y4Ti9uUBv+9nzA==
   dependencies:
     "@0xtemple/common" "^0.0.1"
     "@gear-js/api" "^0.36.5"
