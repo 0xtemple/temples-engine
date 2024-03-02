@@ -6,26 +6,27 @@ import { useRouter } from 'next/router';
 import { NETWORK, PACKAGE_ID, METADATA } from '../../chain/config';
 import { templeConfig } from '../../../temple.config';
 import { PRIVATEKEY } from '../../chain/key';
+export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 const Home = () => {
   const router = useRouter();
   const [value, setValue] = useAtom(Value);
 
   const counter = async () => {
-    // const metadata = await loadMetadata(NETWORK, PACKAGE_ID);
     const temples = new Temples({
       networkType: NETWORK,
       packageId: PACKAGE_ID,
       metadata: METADATA,
       mnemonics: PRIVATEKEY,
+      connectWs: true,
     });
     console.log(METADATA);
     console.log(temples.getAllTypes());
     await temples.tx.contract.Add();
-
+    await delay(2000);
     const component_value = await temples.query.contract.GetCurrentNumber();
     console.log(component_value);
-    setValue(component_value['data']);
+    setValue(component_value['CurrentNumber']);
   };
 
   useEffect(() => {
@@ -35,10 +36,11 @@ const Home = () => {
           networkType: NETWORK,
           packageId: PACKAGE_ID,
           metadata: METADATA,
+          connectWs: true,
         });
         const component_value = await temples.query.contract.GetCurrentNumber();
         console.log(component_value);
-        setValue(component_value['data']);
+        setValue(component_value['CurrentNumber']);
       };
       query_counter();
     }

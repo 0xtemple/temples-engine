@@ -18,6 +18,7 @@ impl Metadata for CounterMetadata {
 #[codec(crate = gstd::codec)]
 #[scale_info(crate = gstd::scale_info)]
 pub enum StateQuery {
+    Get(u128),
     GetCurrentNumber,
 }
 
@@ -33,4 +34,5 @@ pub enum StateReply {
 #[scale_info(crate = gstd::scale_info)]
 pub enum SystemAction {
     Add,
+    Set(u128),
 }

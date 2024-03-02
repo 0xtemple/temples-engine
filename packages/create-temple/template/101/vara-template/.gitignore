@@ -39,9 +39,9 @@ yarn-error.log*
 
 localnode.nohup.out
 
-contracts/counter/build
-contracts/counter/.history
+contracts/target/
 
 yarn.lock
 
 src/chain/key.ts
+

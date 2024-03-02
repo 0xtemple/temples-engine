@@ -46,3 +46,4 @@ sui.log.*
 contracts/target
 contracts/.binpath
 */target
+*/target/

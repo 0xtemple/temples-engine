@@ -124,6 +124,8 @@ export class Temples {
 
           let queryEnumObj = null;
           if (stateInRegex.test(key)) {
+            console.log('query: ');
+            console.log(value);
             if (value !== 'Null') {
               queryEnumObj = JSON.parse(value as string)._enum;
             }

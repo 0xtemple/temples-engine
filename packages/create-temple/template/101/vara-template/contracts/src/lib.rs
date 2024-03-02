@@ -18,6 +18,9 @@ extern fn handle() {
         SystemAction::Add => {
             counter.value = counter.value + 1;
         }
+        SystemAction::Set(_) => {
+
+        }
     }
 }
 
@@ -29,6 +32,9 @@ extern fn state() {
         StateQuery::GetCurrentNumber => {
             msg::reply(StateReply::CurrentNumber(counter.value), 0)
                 .expect("Unable to share the state");
+        },
+        StateQuery::Get(_) => {
+
         }
     }
 }
