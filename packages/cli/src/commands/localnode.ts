@@ -11,6 +11,8 @@ const commandModule: CommandModule = {
   },
 
   async handler() {
+    console.log(`Startting: gear node`);
+    await new Promise((resolve) => setTimeout(resolve, 3000));
     console.log(`Running: gear node`);
     const child = execa("gear", ["--dev"]);
 
