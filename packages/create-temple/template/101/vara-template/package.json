@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "pnpm run start-template",
     "dev:docker": "pnpm run localnode:docker && sleep 5 && ts-node scripts/generateAccount.ts && pnpm temples faucet --network localnet && pnpm temples upload && ts-node scripts/storeConfig.ts localnet && next",
-    "start-template": "pnpm run localnode && sleep 10 && ts-node scripts/generateAccount.ts && pnpm temples faucet --network localnet && pnpm temples upload && ts-node scripts/storeConfig.ts localnet && next",
+    "start-template": "cd contracts/ && cargo build --release && cd ../ && pnpm run localnode && sleep 10 && ts-node scripts/generateAccount.ts && pnpm temples faucet --network localnet && pnpm temples upload && ts-node scripts/storeConfig.ts localnet && next",
     "next": "next",
     "build": "next build",
     "start": "next start",

@@ -1,6 +1,6 @@
 {
   "name": "create-temples",
-  "version": "0.5.6",
+  "version": "0.0.1",
   "type": "module",
   "license": "MIT",
   "author": "team@temples.build",
@@ -15,7 +15,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "unbuild && node index.js",
-    "build": "unbuild && npm run cocos-js-build",
+    "build": "unbuild",
     "cocos-js-build": "cd cocos-lib-builder && npm i && browserify aptos.js -p esmify >  ../template/cocos/aptos-template/assets/lib/temples.js && browserify sui.js -p esmify >  ../template/cocos/sui-template/assets/lib/temples.js"
   },
   "publishConfig": {
