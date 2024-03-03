@@ -37,6 +37,7 @@
     "@0xtemple/common": "^0.0.1",
     "@0xtemple/client": "^0.0.3",
     "@0xtemple/cli": "^0.0.3",
+    "@scure/bip39": "^1.2.1",
     "clsx": "^1.2.1",
     "framer-motion": "^10.12.16",
     "jotai": "^1.7.2",
