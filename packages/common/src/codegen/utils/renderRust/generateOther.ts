@@ -25,10 +25,13 @@ edition = "2021"
 
 [dependencies]
 ${name}-systems = { path = "systems" }
-${name}-schemas = { path = "schemas" }
+${name}-components = { path = "components" }
+${name}-metadata = { path = "metadata" }
 gstd = { git = "https://github.com/gear-tech/gear.git", tag = "v1.1.1", features = ["debug"] }
 gmeta = { git = "https://github.com/gear-tech/gear", tag = "v1.1.1" }
-log = "0.4.20"
+temple-storage = { path = "../../../../temples/crates/storage" }
+temple-types = { path = "../../../../temples/crates/types" }
+scale-info = { version = "2", default-features = false }
 
 [build-dependencies]
 gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git", tag = "v1.1.1" }

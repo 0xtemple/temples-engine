@@ -1,13 +1,33 @@
 import { TempleConfig } from "../../types";
 import { formatAndWriteRust } from "../formatAndWrite";
-import { existsSync } from "fs";
+import {convertToCamelCase} from "./common";
 
-export function generateLib(name: string, path: string) {
+export function generateLib(config: TempleConfig, path: string) {
   let code = `
 #![no_std]
 
-mod handle;
-mod init;
+use ${config.name}_metadata::{StateQuery, StateReply, SystemAction};
+use gstd::msg;
+
+#[no_mangle]
+extern fn init() {
+${    Object.entries(config.schemas)
+      .map(([key, _]) => `${config.name}_components::${key}::${convertToCamelCase(key)}Component.register();`)
+        .join('')
+}
+}
+
+#[no_mangle]
+extern fn handle() {
+    let action: SystemAction = msg::load().expect("Unable to load the system action");
+    match action { }
+}
+
+#[no_mangle]
+extern fn state() {
+    let query: StateQuery = msg::load().expect("Unable to load the state query");
+    match query { }
+}
 `;
   formatAndWriteRust(
     code,
@@ -16,44 +36,6 @@ mod init;
   );
 }
 
-export function generateHandle(name: string, path: string) {
-  let code = `
-use ${name}_systems::SystemAction;
-use gstd::msg;
-
-#[no_mangle]
-extern fn handle() {
-}
-`;
-  formatAndWriteRust(
-    code,
-    `${path}/contracts/src/handle.rs`,
-    "formatAndWriteRust"
-  );
-}
-
-export function generateInit(config: TempleConfig, path: string) {
-  let code = `
-use ${config.name}_schemas::*;
-use ${config.name}_schemas::storage::SchemaEvent;
-use gstd::{msg, vec};
-
-#[no_mangle]
-extern fn init() {
-    msg::reply(SchemaEvent::Register(vec![
-        ${Object.keys(config.schemas).map((schema) => `${schema}::register()`)}
-    ]), 0).expect("Unable to share the state");
-}
-`;
-  formatAndWriteRust(
-    code,
-    `${path}/contracts/src/init.rs`,
-    "formatAndWriteRust"
-  );
-}
-
 export function generateSrc(config: TempleConfig, path: string) {
-  generateLib(config.name, path);
-  generateHandle(config.name, path);
-  generateInit(config, path);
+  generateLib(config, path);
 }

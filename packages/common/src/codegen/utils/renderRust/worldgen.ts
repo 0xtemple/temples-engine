@@ -24,12 +24,10 @@ export function worldgen(config: TempleConfig, srcPrefix?: string) {
   console.log(path);
 
   generateMetadata(config.name, path);
-
   generateSchema(config, path);
-
   generateSystems(config.name, path);
-
   generateOther(config.name, path);
+
 
   // if (existsSync(`${path}/contracts/${config.name}`)) {
   //   deleteFolderRecursive(`${path}/contracts/${config.name}/sources/codegen`);

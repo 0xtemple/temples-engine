@@ -1,32 +1,12 @@
 import {
   TempleConfig,
-  BaseValueType,
   BaseType,
   RenderSchemaOptions,
-  MoveType,
   SchemaInfo,
 } from "../../types";
 import { formatAndWriteRust, writeToml } from "../formatAndWrite";
 import {
-  getFriendSystem,
-  renderKeyName,
-  renderSetFunc,
-  renderContainFunc,
-  renderRemoveFunc,
-  renderStruct,
-  renderNewStructFunc,
   convertToCamelCase,
-  renderSetAttrsFunc,
-  renderRegisterFunc,
-  renderGetAllFunc,
-  renderGetAttrsFunc,
-  getStructAttrsWithType,
-  getStructAttrs,
-  renderRegisterFuncWithInit,
-  renderSingleSetFunc,
-  renderSingleSetAttrsFunc,
-  renderSingleGetAllFunc,
-  renderSingleGetAttrsFunc,
 } from "./common";
 import { generateSrc } from "./generateSrc";
 
@@ -110,98 +90,80 @@ export function generateSchema(config: TempleConfig, path: string) {
     let code = renderSchema(option);
     formatAndWriteRust(
       code,
-      `${path}/contracts/schemas/src/${option.schemaName}.rs`,
+      `${path}/contracts/components/src/${option.schemaName}.rs`,
       "formatAndWriteRust"
     );
   }
   generateLib(config, path);
-  generateStorage(config.name, path);
   generateSchemaToml(config.name, path);
 
   generateSrc(config, path);
 }
 
+function generateComponentIdString(ComponentName: string, ephemeral: boolean): string {
+  const prefix = ephemeral ? "10" : "00";
+  const bytes = Buffer.from(ComponentName, 'utf-8');
+  const buffer = Buffer.alloc(32).fill(0);
+  buffer.write(prefix, 'hex');
+  bytes.copy(buffer, 2);
+  const hexString = buffer.toString('hex');
+  return hexString;
+}
+
+function generateComponentIdU8Array(ComponentName: string, ephemeral: boolean) {
+  const encoder = new TextEncoder();
+  const bytes = encoder.encode(ComponentName);
+  const array = new Uint8Array(32);
+  array.fill(0);
+  if (ephemeral) {
+    array[0] = 1;
+  }
+  array.set(bytes, 2);
+
+  return array;
+}
+
+
+function decodeComponentId(componentId: string): { name: string, isOnchain: boolean } {
+  const buffer = Buffer.from(componentId, 'hex');
+  const prefixBytes = buffer.slice(0, 2);
+  const isOnchain = prefixBytes.equals(Buffer.from('00', 'hex'));
+  const nameBytes = buffer.slice(2);
+  const name = nameBytes.toString('utf-8').replace(/\0/g, '');
+  return { name, isOnchain };
+}
+
+function generateStructField(keys: string[], types: string[]) {
+  let result = '';
+  for (let i = 0; i < keys.length; i++) {
+    result += `pub ${keys[i]}: ${types[i]},\n`;
+  }
+  return result;
+}
+
+
 function renderSchema(option: RenderSchemaOptions) {
-  console.log(option.schemaInfo.keyNames);
-  console.log(generateTuple(option.schemaInfo.keyNames).length);
-  console.log(
-    option.schemaInfo.keyNames.length === 0
-      ? `vec![]`
-      : generateTuple(option.schemaInfo.keyNames) + `.encode()`
-  );
+  console.log(option);
+
   return `
-use gstd::ActorId;
-use gstd::collections::HashMap;
+#![allow(non_upper_case_globals)]
+
+use lazy_static::lazy_static;
+use temple_storage::value::StorageValue;
 use gstd::prelude::*;
-use crate::storage::{SchemaType, TEMPLE_STORAGE};
 
-pub fn get_schema_id() -> ActorId {
-    crate::storage::get_schema_id(SchemaType::${
-      option.ephemeral ? "Offchain" : "Onchain"
-    }, String::from("${option.schemaInfo.structName}"))
-}
+// 0x${generateComponentIdString(option.schemaInfo.structName, option.ephemeral)}
+const COMPONENT_ID: [u8; 32] = [${generateComponentIdU8Array(option.schemaInfo.structName, option.ephemeral)}];
 
-pub fn get_key_types() -> Vec<String> {
-    vec![${option.schemaInfo.keyTypes.map((type) => `String::from("${type}")`)}]
-}
+${option.schemaInfo.valueNames.length === 1 ? '' : `
+#[derive(Debug, Default, Encode, Decode, TypeInfo)]
+pub struct ${option.schemaInfo.structName} { 
+${generateStructField(option.schemaInfo.valueNames,option.schemaInfo.valueTypes)}
+}`  }
 
-pub fn get_key_names() -> Vec<String> {
-    vec![${option.schemaInfo.keyNames.map((name) => `String::from("${name}")`)}]
-}
-
-pub fn get_value_types() -> Vec<String> {
-     vec![${option.schemaInfo.valueTypes.map(
-       (type) => `String::from("${type}")`
-     )}]
-}
-
-pub fn get_value_names() -> Vec<String> {
-    vec![${option.schemaInfo.valueNames.map(
-      (name) => `String::from("${name}")`
-    )}]
-}
-
-pub fn register() -> (ActorId, Vec<u8>) {
-    let temple_schema = unsafe { TEMPLE_STORAGE.get_or_insert(Default::default()) };
-    temple_schema.set_schema_metadata(
-        get_schema_id(),
-        get_key_types(),
-        get_key_names(),
-        get_value_types(),
-        get_value_names(),
-    )
-}
-
-pub fn get(${option.schemaInfo.keyNames.map(
-    (key, index) => `${key}: ${option.schemaInfo.keyTypes[index]}`
-  )}) -> ${generateTuple(option.schemaInfo.valueTypes)} {
-    let temple_schema = unsafe { TEMPLE_STORAGE.get_or_insert(Default::default()) };
-    let temple_key_tuple = ${
-      option.schemaInfo.keyNames.length === 0
-        ? `vec![]`
-        : generateTuple(option.schemaInfo.keyNames) + `.encode()`
-    };
-    let temple_raw_value = temple_schema.get(get_schema_id(), temple_key_tuple);
-    Decode::decode(&mut &temple_raw_value[..]).unwrap_or(Default::default())
-}
-
-pub fn set(${option.schemaInfo.keyNames
-    .map((key, index) => `${key}: ${option.schemaInfo.keyTypes[index]}`)
-    .concat(
-      option.schemaInfo.valueNames.map(
-        (key, index) => `${key}: ${option.schemaInfo.valueTypes[index]}`
-      )
-    )}) {
-    let temple_schema = unsafe { TEMPLE_STORAGE.get_or_insert(Default::default()) };
-    let temple_key_tuple = ${
-      option.schemaInfo.keyNames.length === 0
-        ? `vec![]`
-        : generateTuple(option.schemaInfo.keyNames) + `.encode()`
-    };
-    let temple_raw_value = ${generateTuple(
-      option.schemaInfo.valueNames
-    )}.encode();
-    temple_schema.set(get_schema_id(), temple_key_tuple, temple_raw_value);
+lazy_static! {
+    pub static ref ${option.schemaInfo.structName}Component: StorageValue<${option.schemaInfo.valueNames.length === 1 ? option.schemaInfo.valueTypes[0] : option.schemaInfo.structName}> =
+        StorageValue::new("${option.schemaInfo.structName}".into(), COMPONENT_ID);
 }
 `;
 }
@@ -210,144 +172,31 @@ export function generateLib(config: TempleConfig, path: string) {
   let code = `
 #![no_std]
 
-pub mod storage;
 ${Object.keys(config.schemas)
   .map((schema) => `pub mod ${schema};`)
   .join("\n")}
 `;
   formatAndWriteRust(
     code,
-    `${path}/contracts/schemas/src/lib.rs`,
-    "formatAndWriteRust"
-  );
-}
-
-export function generateStorage(name: string, path: string) {
-  let code = `
-use gstd::collections::HashMap;
-use gstd::prelude::*;
-use gstd::{ActorId, msg};
-use parity_scale_codec::{Decode, Encode};
-
-type SchemaId = ActorId;
-type Keys = Vec<String>;
-type KeyNames = Vec<String>;
-type Types = Vec<String>;
-type TypeNames = Vec<String>;
-
-#[derive(Debug, Default, Encode, Decode)]
-pub struct SchemaInfo {
-    keys: Keys,
-    key_names: KeyNames,
-    types: Types,
-    type_names: TypeNames,
-}
-
-#[derive(Debug, Encode, Decode, TypeInfo)]
-pub enum SchemaEvent {
-    SetRecord(SchemaId, Vec<u8>, Vec<u8>),
-    DeleteRecord(SchemaId, Vec<u8>),
-    Register(Vec<(SchemaId, Vec<u8>)>)
-}
-
-#[derive(Debug, Encode, Decode)]
-pub enum SchemaType {
-    Onchain,
-    Offchain,
-}
-
-#[derive(Debug, Default)]
-pub struct Schema {
-    table: HashMap<ActorId, HashMap<Vec<u8>, Vec<u8>>>,
-}
-
-pub fn get_schema_id(schema_type: SchemaType, schema_name: String) -> ActorId {
-    let mut bytes = Vec::new();
-
-    match schema_type {
-        SchemaType::Onchain => bytes.extend(&vec![0]),
-        SchemaType::Offchain => bytes.extend(&vec![1])
-    }
-    let mut schema_name_bytes = schema_name.into_bytes();
-    schema_name_bytes.resize(30, 0);
-    bytes.extend(&schema_name_bytes);
-    let bytes:[u8;32] = bytes.try_into().expect("Failed");
-    ActorId::from(bytes)
-}
-
-pub fn get_schema_type(schema_id: ActorId) -> SchemaType {
-    if let [0, 0, ..] = schema_id.encode().as_slice() {
-        SchemaType::Onchain
-    } else if let [1, 0, ..] = schema_id.encode().as_slice() {
-        SchemaType::Offchain
-    } else {
-        panic!("Invalid schema_id")
-    }
-}
-
-impl Schema {
-    pub fn set_schema_metadata(&mut self, schema_id: ActorId,  keys: Keys, key_names: KeyNames, types: Types, type_names: TypeNames) -> (ActorId, Vec<u8>) {
-        let schema_info = SchemaInfo {
-            keys,
-            key_names,
-            types,
-            type_names,
-        };
-        let key_tuple = schema_id.encode();
-        let data = schema_info.encode();
-        let mut hash_map: HashMap<Vec<u8>, Vec<u8>> = HashMap::new();
-        hash_map.insert(key_tuple.clone(), data.clone());
-        self.table.insert(schema_id, hash_map);
-        (schema_id, data)
-    }
-
-    pub fn get_schema_metadata(&mut self, schema_id: ActorId) -> SchemaInfo {
-        let table = self.table.get(&schema_id).expect("Failed");
-        let data = table.get(&schema_id.encode()).expect("Failed");
-        SchemaInfo::decode(&mut &data[..]).expect("Failed")
-    }
-
-    pub fn get(&self, schema_id: ActorId, key_tuple: Vec<u8>) -> Vec<u8> {
-        let table = self.table.get(&schema_id).expect("Failed");
-        table.get(&key_tuple).unwrap_or(&Vec::new()).clone()
-    }
-
-    pub fn set(&mut self, schema_id: ActorId, key_tuple: Vec<u8>, data: Vec<u8>) {
-        let table = self.table.entry(schema_id).or_insert_with(|| panic!("Failed"));
-        table.insert(key_tuple.clone(), data.clone());
-        msg::reply(SchemaEvent::SetRecord(schema_id, key_tuple, data), 0).expect("Unable to share the state");
-    }
-
-    pub fn delete(&mut self, schema_id: ActorId, key_tuple: Vec<u8>) {
-        let table = self.table.entry(schema_id).or_insert_with(|| panic!("Failed"));
-        table.remove(&key_tuple);
-        msg::reply(SchemaEvent::DeleteRecord(schema_id, key_tuple), 0).expect("Unable to share the state");
-    }
-}
-
-pub static mut TEMPLE_STORAGE: Option<Schema> = None;
-`;
-  formatAndWriteRust(
-    code,
-    `${path}/contracts/schemas/src/storage.rs`,
+    `${path}/contracts/components/src/lib.rs`,
     "formatAndWriteRust"
   );
 }
 
 export function generateSchemaToml(name: string, path: string) {
   let code = `[package]
-name = "${name}-schemas"
+name = "${name}-components"
 version = "0.1.0"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 gstd = { git = "https://github.com/gear-tech/gear.git", tag = "v1.1.1", features = ["debug"] }
 gmeta = { git = "https://github.com/gear-tech/gear", tag = "v1.1.1" }
-sp-core-hashing = { version = "10", default-features = false }
 parity-scale-codec = { version = "3", default-features = false }
+temple-storage = { path = "../../../../../temples/crates/storage" }
+temple-types = { path = "../../../../../temples/crates/types" }
+lazy_static = { version = "1.4.0", features = ["spin_no_std"] }
 scale-info = { version = "2", default-features = false }
 `;
-  writeToml(code, `${path}/contracts/schemas/Cargo.toml`, "writeToml");
+  writeToml(code, `${path}/contracts/components/Cargo.toml`, "writeToml");
 }
