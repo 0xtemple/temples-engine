@@ -39,7 +39,7 @@
     "lint": "eslint . --ext .ts"
   },
   "dependencies": {
-    "@0xtemple/common": "workspace:^0.0.1",
+    "@0xtemple/common": "workspace:../common",
     "chalk": "^5.0.1",
     "@gear-js/api": "^0.36.5",
     "@polkadot/api": "^10.11.2",

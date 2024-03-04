@@ -7,13 +7,7 @@ export function generateLib(name: string, path: string) {
   let code = `
 #![no_std]
 
-use gstd::{Decode, Encode, TypeInfo};
 
-#[derive(Debug, Decode, Encode, TypeInfo)]
-#[codec(crate = gstd::codec)]
-#[scale_info(crate = gstd::scale_info)]
-pub enum SystemAction {
-}
 `;
   formatAndWriteRust(
     code,
@@ -29,12 +23,10 @@ name = "${name}-systems"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
-${name}-schemas = { path = "../schemas" }
 gstd = { git = "https://github.com/gear-tech/gear.git", tag = "v1.1.1", features = ["debug"] }
 gmeta = { git = "https://github.com/gear-tech/gear", tag = "v1.1.1" }
+counter-components = { path = "../components" }
 `;
   writeToml(code, `${path}/contracts/systems/Cargo.toml`, "writeToml");
 }
