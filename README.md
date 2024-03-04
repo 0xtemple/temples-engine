@@ -1,41 +1,14 @@
 ## Temples-Engine
 
-<div align="center">
-  <img src="assets/temples-full.jpeg">
-</div>
-<div align="center">
-<br />
-<!-- markdownlint-restore -->
-
-<a href="https://twitter.com/0xtemplLabs">
-<img src="https://img.shields.io/twitter/follow/0xtemplLabs?style=social"/>
-</a>
-<a href="https://github.com/0xtempl/temples-engine">
-
-[//]: # (<img src="https://img.shields.io/github/stars/0xtempl/temples-engine?style=social"/>)
-</a>
-</div>
-
 **Temples-Engine is a community driven open-source, Provable Game Engine, providing a comprehensive toolkit for building verifiable games and autonomous worlds.**
 
 Temples-Engine is still in its early stages of development, yet the dedicated contributors are propelling its progress at an impressive pace. The overarching aspiration for Temples-Engine is to empower game developers to kick-start their projects, aiming to reduce the initial setup time from days to mere hours. Join the movement!
 
 ## 🔑 Key Features
-- Entity Protocol System (EPS) written in [Move](https://move-language.github.io/move/)
+- Entity Protocol System (EPS) written in [Rust](https://wiki.gear-tech.io/docs/examples/ping)
 - Protocol Mastermind
 - networking & indexing stack
 - Typed SDKs
-
-
-## What we will do in the future ？
-- ZK-login Injected as a plug-in
-- Transaction sponsorship injected as a plugin
-- State Synchronization Client Hook Implementation
-- Customized Runtime Sandbox
-- World Browser
-
-## 🚀 Quick Start
-See the [start guide](https://temples.build/engine/docs/quick-start) in the document website.
 
 ## Packages 
 
@@ -46,17 +19,18 @@ Temples consists of several libraries. They can be used independently, but are b
 | **[@0xtemple/cli](./packages/cli)** <br />Sui Command line interface for types, testing, faucet, deployment and more                                 | [![npm version](https://img.shields.io/npm/v/@0xtemple/cli.svg)](https://www.npmjs.com/package/@0xtemple/cli)       |
 | **[@0xtemple/client](./packages/client)** <br />Sui Client-side Typescript implementation for cross-platform interaction with chained Packages       | [![npm version](https://img.shields.io/npm/v/@0xtemple/client.svg)](https://www.npmjs.com/package/@0xtemple/client) |
 | **[@0xtemple/common](./packages/common)** <br />Sui Core code for CLI and Clinet                                                                     | [![npm version](https://img.shields.io/npm/v/@0xtemple/common.svg)](https://www.npmjs.com/package/@0xtemple/common) |
-| **[@0xtemple/aptos-cli](./packages/aptos-cli)** <br />Aptos Command line interface for types, testing, faucet, deployment and more                           | [![npm version](https://img.shields.io/npm/v/@0xtemple/aptos-cli.svg)](https://www.npmjs.com/package/@0xtemple/aptos-cli)       |
-| **[@0xtemple/aptos-client](./packages/aptos-client)** <br />Aptos Client-side Typescript implementation for cross-platform interaction with chained Packages | [![npm version](https://img.shields.io/npm/v/@0xtemple/aptos-client.svg)](https://www.npmjs.com/package/@0xtemple/aptos-client) |
-| **[@0xtemple/aptos-common](./packages/aptos-common)** <br />Aptos Core code for CLI and Clinet                                                               | [![npm version](https://img.shields.io/npm/v/@0xtemple/aptos-common.svg)](https://www.npmjs.com/package/@0xtemple/aptos-common) |
 
-## 🗒️ Documentation
 
-You can find more detailed documentation in [here](https://temples.build/engine/docs).
+## How to use?
 
-## ❓ Support
+pnpm create temples 
 
-If you encounter issues or have questions, [you can submit an issue on GitHub](https://github.com/0xtempl/temples-engine/issues). You can also join our Discord for discussion and help.
+chose 101
+
+pnpm install
+
+pnpm run dev
+
 
 ## 🏗️ Contributing
 
